@@ -1,18 +1,18 @@
 function buildSpiralPath(): string {
   const cx = 50
   const cy = 52
-  const turns = 2.15
+  const turns = 1.95
   const startAngleDeg = -100
-  const rStart = 36
-  const rEnd = 3
-  const samples = 140
+  const rStart = 37
+  const rEnd = 4
+  const samples = 160
 
   const points: Array<[number, number]> = []
 
   for (let i = 0; i <= samples; i++) {
     const t = i / samples
     const angle = ((startAngleDeg + t * turns * 360) * Math.PI) / 180
-    const r = rStart + (rEnd - rStart) * (1 - Math.pow(1 - t, 1.6))
+    const r = rStart * Math.pow(rEnd / rStart, t)
     const x = cx + r * Math.cos(angle)
     const y = cy + r * Math.sin(angle)
     points.push([x, y])
@@ -30,7 +30,7 @@ interface LogoProps {
   className?: string
 }
 
-export function Logo({ size = 32, className }: LogoProps) {
+export function Logo({ size = 36, className }: LogoProps) {
   return (
     <svg
       width={size}
@@ -44,7 +44,7 @@ export function Logo({ size = 32, className }: LogoProps) {
         d={SPIRAL_PATH}
         fill="none"
         stroke="var(--accent)"
-        strokeWidth={8}
+        strokeWidth={7.5}
         strokeLinecap="round"
         strokeLinejoin="round"
       />

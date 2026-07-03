@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CHAINS, EVM_CHAINS, NON_EVM_CHAINS } from '@/lib/chains'
+import { CHAINS } from '@/lib/chains'
 import { validateAddress } from '@/lib/validateAddress'
+import { ChainSelect } from './ChainSelect'
 
 export function WalletForm() {
   const navigate = useNavigate()
@@ -41,27 +42,7 @@ export function WalletForm() {
       <label className="wallet-form-label" htmlFor="chain">
         Chain
       </label>
-      <select
-        id="chain"
-        className="wallet-form-select"
-        value={chain}
-        onChange={(e) => setChain(e.target.value)}
-      >
-        <optgroup label="EVM">
-          {EVM_CHAINS.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.label}
-            </option>
-          ))}
-        </optgroup>
-        <optgroup label="Non-EVM">
-          {NON_EVM_CHAINS.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.label}
-            </option>
-          ))}
-        </optgroup>
-      </select>
+      <ChainSelect id="chain" value={chain} onChange={setChain} />
 
       {formError && <p className="wallet-form-error">{formError}</p>}
 
