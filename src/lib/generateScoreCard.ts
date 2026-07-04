@@ -38,33 +38,13 @@ function getMetaLabel(key: string, metadata: ScoreMetadata): string {
   }
 }
 
-function drawSpiral(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
-  const scale = size / 100
-  const originX = x + 50 * scale
-  const originY = y + 52 * scale
-  const turns = 1.95
-  const startAngleDeg = -100
-  const rStart = 37 * scale
-  const rEnd = 4 * scale
-  const samples = 160
-
-  ctx.save()
-  ctx.beginPath()
-  for (let i = 0; i <= samples; i++) {
-    const t = i / samples
-    const angle = ((startAngleDeg + t * turns * 360) * Math.PI) / 180
-    const r = rStart * Math.pow(rEnd / rStart, t)
-    const px = originX + r * Math.cos(angle)
-    const py = originY + r * Math.sin(angle)
-    if (i === 0) ctx.moveTo(px, py)
-    else ctx.lineTo(px, py)
-  }
-  ctx.strokeStyle = '#00E5A0'
-  ctx.lineWidth = 7.5 * scale
-  ctx.lineCap = 'round'
-  ctx.lineJoin = 'round'
-  ctx.stroke()
-  ctx.restore()
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = src
+  })
 }
 
 function roundedRect(
@@ -94,6 +74,7 @@ export async function generateScoreCard(params: {
   const { score, signals, metadata, chain, wallet } = params
 
   await document.fonts.ready
+  const logoImg = await loadImage('/logo.jpg')
 
   const W = 640
   const H = 800
@@ -114,7 +95,10 @@ export async function generateScoreCard(params: {
   ctx.strokeRect(0.5, 0.5, W - 1, H - 1)
 
   // --- Header: logo + brand ---
-  drawSpiral(ctx, PAD - 8, 18, 58)
+  const LOGO_SIZE = 40
+  const LOGO_X = PAD - 8
+  const LOGO_Y = 18
+  ctx.drawImage(logoImg, LOGO_X, LOGO_Y, LOGO_SIZE, LOGO_SIZE)
 
   ctx.textBaseline = 'alphabetic'
   ctx.textAlign = 'left'
