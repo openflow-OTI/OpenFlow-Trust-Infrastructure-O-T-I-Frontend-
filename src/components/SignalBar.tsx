@@ -12,12 +12,23 @@ function signalColor(value: number): string {
   return 'var(--danger)'
 }
 
-export function SignalBar({ signalKey, value }: { signalKey: string; value: number }) {
+interface SignalBarProps {
+  signalKey: string
+  value: number
+  metadataLabel?: string
+}
+
+export function SignalBar({ signalKey, value, metadataLabel }: SignalBarProps) {
   const color = signalColor(value)
   return (
     <div className="signal-bar">
       <div className="signal-bar-header">
-        <span className="signal-bar-label">{SIGNAL_LABELS[signalKey] ?? signalKey}</span>
+        <div className="signal-bar-label-group">
+          <span className="signal-bar-label">{SIGNAL_LABELS[signalKey] ?? signalKey}</span>
+          {metadataLabel && (
+            <span className="signal-bar-meta">{metadataLabel}</span>
+          )}
+        </div>
         <span className="signal-bar-value" style={{ color }}>
           {value}
         </span>

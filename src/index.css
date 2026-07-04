@@ -403,8 +403,20 @@ select {
   font-size: 0.8rem;
 }
 
+.signal-bar-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
 .signal-bar-label {
   color: var(--text-dim);
+}
+
+.signal-bar-meta {
+  font-size: 0.7rem;
+  color: var(--accent);
+  opacity: 0.8;
 }
 
 .signal-bar-value {

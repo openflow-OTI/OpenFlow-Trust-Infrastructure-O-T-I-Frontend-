@@ -1,11 +1,11 @@
 function buildSpiralPath(): string {
   const cx = 50
-  const cy = 52
-  const turns = 1.95
-  const startAngleDeg = -100
-  const rStart = 37
-  const rEnd = 4
-  const samples = 160
+  const cy = 50
+  const turns = 2.05
+  const startAngleDeg = -75
+  const rStart = 41
+  const rEnd = 6
+  const samples = 200
 
   const points: Array<[number, number]> = []
 
@@ -44,7 +44,7 @@ export function Logo({ size = 36, className }: LogoProps) {
         d={SPIRAL_PATH}
         fill="none"
         stroke="var(--accent)"
-        strokeWidth={7.5}
+        strokeWidth={8}
         strokeLinecap="round"
         strokeLinejoin="round"
       />

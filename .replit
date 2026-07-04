@@ -37,3 +37,4 @@ externalPort = 80
 [userenv]
 
 [userenv.shared]
+VITE_API_BASE_URL = "https://workspaceapi-server-production-5c0c.up.railway.app"
