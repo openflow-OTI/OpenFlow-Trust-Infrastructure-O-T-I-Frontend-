@@ -10,6 +10,8 @@ import { CompromisedBanner } from '@/components/CompromisedBanner'
 import { CachedBadge } from '@/components/CachedBadge'
 import { ErrorPanel } from '@/components/ErrorPanel'
 import { LoadingPanel } from '@/components/LoadingPanel'
+import { ShareButton } from '@/components/ShareButton'
+import { ChainIcon } from '@/components/ChainIcon'
 
 export function Home() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -33,7 +35,7 @@ export function Home() {
     return (
       <div className="home-page">
         <div className="home-intro">
-          <h1 className="home-title">Score any wallet's on-chain trust.</h1>
+          <h1 className="home-title">Get On-chain Wallet Trust By Scoring On-chain Wallet</h1>
           <p className="home-subtitle">
             Paste a wallet address, pick a chain, get a 0–100 trust score backed by five
             on-chain signals. Free, no login required.
@@ -51,14 +53,16 @@ export function Home() {
 
   return (
     <div className="results-page">
-      <div className="results-header">
-        <button className="results-back" onClick={handleClear}>
-          &larr; Score another wallet
-        </button>
-        <div className="results-target">
-          <span className="results-address">{wallet}</span>
-          <span className="results-chain">{chainInfo?.label ?? chain}</span>
+      <button className="results-back" onClick={handleClear}>
+        &larr; Score another wallet
+      </button>
+
+      <div className="results-hero">
+        <div className="results-hero-icon-wrap">
+          <ChainIcon chainId={chain} size={52} />
         </div>
+        <p className="results-hero-address">{wallet}</p>
+        {chainInfo && <span className="results-hero-chain">{chainInfo.label}</span>}
       </div>
 
       {scoreQuery.isLoading && <LoadingPanel label="Computing trust score…" />}
@@ -99,6 +103,14 @@ export function Home() {
                   />
                 ))}
               </div>
+
+              <ShareButton
+                score={scoreQuery.data.score}
+                signals={scoreQuery.data.signals}
+                metadata={scoreQuery.data.metadata}
+                chain={chain}
+                wallet={wallet}
+              />
             </>
           )}
         </div>

@@ -39,7 +39,7 @@ export function ScoreGauge({ score }: { score: number }) {
       </svg>
       <div className="score-gauge-value" style={{ color }}>
         <span className="score-gauge-number">{score}</span>
-        <span className="score-gauge-max">/100</span>
+        <span className="score-gauge-percent">%</span>
       </div>
     </div>
   )

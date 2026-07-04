@@ -10,11 +10,9 @@ export function formatMetadataLabel(signalKey: string, metadata: ScoreMetadata):
     case 'tokenHoldingBehavior':
       return `${n(metadata.uniqueTokens)} unique tokens`
     case 'smartContractInteractions':
-      return metadata.contractInteractions > 0
-        ? 'interacted with contracts'
-        : 'no contract interactions'
+      return `${n(metadata.contractInteractions)} smart-contract transactions`
     case 'transactionTimingPatterns':
-      return `${n(metadata.internalTxCount)} internal txs`
+      return `${n(metadata.internalTxCount)} internal transactions`
     default:
       return ''
   }

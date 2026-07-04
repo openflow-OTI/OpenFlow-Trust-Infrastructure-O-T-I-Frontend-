@@ -32,16 +32,28 @@ export function WalletForm({ onSubmit, initialAddress = '', initialChain }: Wall
       <label className="wallet-form-label" htmlFor="address">
         Wallet address
       </label>
-      <input
-        id="address"
-        className="wallet-form-input"
-        type="text"
-        placeholder="0x… or wallet address"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        autoComplete="off"
-        spellCheck={false}
-      />
+      <div className="wallet-form-input-wrapper">
+        <input
+          id="address"
+          className="wallet-form-input"
+          type="text"
+          placeholder="0x… or wallet address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        {address && (
+          <button
+            type="button"
+            className="wallet-form-clear"
+            onClick={() => setAddress('')}
+            aria-label="Clear address"
+          >
+            ×
+          </button>
+        )}
+      </div>
 
       <label className="wallet-form-label" htmlFor="chain">
         Chain
