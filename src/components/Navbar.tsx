@@ -5,7 +5,7 @@ export function Navbar() {
   return (
     <header className="navbar">
       <Link to="/" className="navbar-brand">
-        <Logo size={34} />
+        <Logo size={44} />
         <span className="navbar-title">
           <strong>OTI</strong>
           <span className="navbar-subtitle">OpenFlow Trust Infrastructure</span>
