@@ -31,7 +31,9 @@ function getMetaLabel(key: string, metadata: ScoreMetadata): string {
     case 'walletAge':
       return `${fmt(metadata.walletAgedays)} days`
     case 'transactionCount':
-      return `${fmt(metadata.txCount)} transactions`
+      return metadata.txCount >= 1000
+        ? '1,000+ transactions'
+        : `${fmt(metadata.txCount)} transactions`
     case 'tokenHoldingBehavior':
       return `${fmt(metadata.uniqueTokens)} unique tokens`
     case 'smartContractInteractions':
