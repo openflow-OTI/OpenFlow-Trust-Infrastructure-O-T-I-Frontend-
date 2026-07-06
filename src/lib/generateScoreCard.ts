@@ -74,7 +74,7 @@ export async function generateScoreCard(params: {
   const { score, signals, metadata, chain, wallet } = params
 
   await document.fonts.ready
-  const logoImg = await loadImage('/logo.jpg')
+  const logoImg = await loadImage('/logo.svg')
 
   const W = 640
   const H = 800

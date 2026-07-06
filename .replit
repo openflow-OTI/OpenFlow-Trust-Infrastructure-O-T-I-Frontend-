@@ -7,6 +7,28 @@ stack = "BEST_EFFORT_FALLBACK"
 channel = "stable-25_05"
 
 [workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --legacy-peer-deps && npm run dev"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000
@@ -15,3 +37,4 @@ externalPort = 80
 [userenv]
 
 [userenv.shared]
+VITE_API_BASE_URL = "https://workspaceapi-server-production-5c0c.up.railway.app"
