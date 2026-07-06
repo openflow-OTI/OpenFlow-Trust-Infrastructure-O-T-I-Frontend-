@@ -72,6 +72,15 @@ Call `GET /api/healthz` or a suitable endpoint to fetch the anonymous plan's `da
 
 ---
 
+### Task 10 — API Health Status Indicator ✅
+- src/hooks/useHealth.ts connected to Navbar.tsx
+- 7px status dot in top-right: green (online), red (offline), hidden (loading)
+- Pulsing ring animation via GPU-accelerated transform + opacity pseudo-element
+- Accessible: role="status", aria-live="polite", sr-only text label
+- Verified live on Vercel — confirmed by Manager
+
+---
+
 ### TASK 10 — API Health Status Indicator
 **Phase:** 2 — Operational
 **Priority:** LOW
