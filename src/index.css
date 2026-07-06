@@ -67,17 +67,17 @@ textarea {
 
 .navbar-brand {
   display: inline-flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navbar-top-row {
+  display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
 .navbar-title {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.navbar-title strong {
   color: var(--accent);
   font-size: 1.1rem;
   letter-spacing: 0.05em;
@@ -87,7 +87,7 @@ textarea {
   font-size: 0.78rem;
   color: var(--text-dim);
   letter-spacing: 0.04em;
-  margin-top: 0.25rem;
+  margin-top: 0.15rem;
 }
 
 .app-main {
