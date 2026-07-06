@@ -10,14 +10,16 @@ import { Dashboard } from './admin/Dashboard'
 import { ApiKeys } from './admin/ApiKeys'
 import { QueryHistory } from './admin/QueryHistory'
 import { AdminCache } from './admin/AdminCache'
+import { PlanConfigs } from './admin/PlanConfigs'
 
-type Screen = 'dashboard' | 'keys' | 'history' | 'cache'
+type Screen = 'dashboard' | 'keys' | 'history' | 'cache' | 'plans'
 
 const SCREENS: { id: Screen; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'keys',      label: 'API Keys' },
   { id: 'history',   label: 'Query History' },
   { id: 'cache',     label: 'Cache' },
+  { id: 'plans',     label: 'Plan Configs' },
 ]
 
 export function Admin() {
@@ -118,6 +120,7 @@ export function Admin() {
         {screen === 'keys'      && <ApiKeys />}
         {screen === 'history'   && <QueryHistory />}
         {screen === 'cache'     && <AdminCache />}
+        {screen === 'plans'     && <PlanConfigs />}
       </div>
     </div>
   )
