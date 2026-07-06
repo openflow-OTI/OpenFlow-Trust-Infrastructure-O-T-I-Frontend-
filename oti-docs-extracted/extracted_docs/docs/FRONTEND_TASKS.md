@@ -29,6 +29,11 @@
 - Verified live on Vercel — all 5 bars showing weighted values
 - Also resolved black screen crash caused by Task 5 API shape mismatch
 
+### Task 7B — txCount Cap Indicator ✅
+- formatMetadata.ts updated: txCount >= 1000 displays "1,000+ transactions" instead of "1,000 transactions"
+- generateScoreCard.ts updated with same logic so score card PNG stays consistent with UI
+- Verified live on Vercel — confirmed by Manager
+
 ---
 
 ## 🔴 Your Task Queue — Build In This Exact Order

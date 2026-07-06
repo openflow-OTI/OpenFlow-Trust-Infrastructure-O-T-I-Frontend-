@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import { WalletForm } from '@/components/WalletForm'
 import { useScore } from '@/hooks/useScore'
+import { useAnonymousLimit } from '@/hooks/useAnonymousLimit'
 import { getChainInfo } from '@/lib/chains'
 import { friendlyErrorMessage } from '@/lib/apiError'
 import { formatMetadataLabel } from '@/lib/formatMetadata'
@@ -22,6 +23,7 @@ export function Home() {
   const chainInfo = getChainInfo(chain)
 
   const scoreQuery = useScore(wallet, chain)
+  const limitQuery = useAnonymousLimit()
 
   function handleSearch(address: string, selectedChain: string) {
     setSearchParams({ wallet: address, chain: selectedChain })
@@ -45,7 +47,9 @@ export function Home() {
           <WalletForm onSubmit={handleSearch} />
         </div>
         <p className="home-rate-note">
-          Anonymous lookups are limited to 3 per day. Choose your wallet carefully.
+          {limitQuery.isSuccess
+            ? `Anonymous lookups are limited to ${limitQuery.data} per day. Choose your wallet carefully.`
+            : 'Anonymous lookups are limited per day. Choose your wallet carefully.'}
         </p>
       </div>
     )
