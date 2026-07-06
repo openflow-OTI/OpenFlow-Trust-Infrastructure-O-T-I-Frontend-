@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminFetch } from '@/lib/adminClient'
 
@@ -161,8 +161,8 @@ export function ApiKeys() {
         </thead>
         <tbody>
           {keys.data!.map(k => (
-            <>
-              <tr key={k.id}>
+            <React.Fragment key={k.id}>
+              <tr>
                 <td className="admin-td-mono">{k.owner_address}</td>
                 <td>{k.plan}</td>
                 <td className="admin-td-mono">…{k.last4}</td>
@@ -251,7 +251,7 @@ export function ApiKeys() {
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
           {keys.data!.length === 0 && (
             <tr>

@@ -1,6 +1,16 @@
-import { useState } from 'react'
+import React, { useState, Component, type ReactNode } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminFetch } from '@/lib/adminClient'
+
+// Error boundary — prevents a crash here from blanking the whole admin page
+class PlanConfigsErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
+  state = { error: null }
+  static getDerivedStateFromError(e: Error) { return { error: e.message } }
+  render() {
+    if (this.state.error) return <p className="admin-error">Failed to render Plan Configs: {this.state.error}</p>
+    return this.props.children
+  }
+}
 
 // Schema: snake_case throughout (matches schema.gen.ts PlanConfig)
 interface PlanConfig {
@@ -22,6 +32,10 @@ function fmt(ts: string | null | undefined) {
 }
 
 export function PlanConfigs() {
+  return <PlanConfigsErrorBoundary><PlanConfigsInner /></PlanConfigsErrorBoundary>
+}
+
+function PlanConfigsInner() {
   const qc = useQueryClient()
 
   const configs = useQuery({
@@ -108,8 +122,8 @@ export function PlanConfigs() {
         </thead>
         <tbody>
           {configs.data!.map(cfg => (
-            <>
-              <tr key={cfg.id}>
+            <React.Fragment key={cfg.id}>
+              <tr>
                 <td className="admin-td-mono" style={{ maxWidth: 'unset' }}>{cfg.plan_name}</td>
                 <td>{fmtLimit(cfg.daily_limit)}</td>
                 <td style={{ color: cfg.description ? 'var(--text)' : 'var(--text-dim)' }}>
@@ -182,7 +196,7 @@ export function PlanConfigs() {
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
           {configs.data!.length === 0 && (
             <tr>
