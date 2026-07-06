@@ -84,9 +84,10 @@ textarea {
 }
 
 .navbar-subtitle {
-  font-size: 0.65rem;
+  font-size: 0.78rem;
   color: var(--text-dim);
   letter-spacing: 0.04em;
+  margin-top: 0.25rem;
 }
 
 .app-main {
