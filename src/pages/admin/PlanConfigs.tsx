@@ -21,8 +21,8 @@ interface PlanConfig {
   updated_at: string
 }
 
-function fmtLimit(limit: number | null) {
-  if (limit === null) return 'Unlimited'
+function fmtLimit(limit: number | null | undefined) {
+  if (limit == null) return 'Unlimited'
   return limit.toLocaleString()
 }
 
