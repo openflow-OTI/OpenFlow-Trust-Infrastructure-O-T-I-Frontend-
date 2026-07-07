@@ -1358,10 +1358,18 @@ textarea {
 
 /* ── Inline copy row (text + copy button) ── */
 .admin-copy-row {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.35rem;
+  min-width: 0;
   max-width: 100%;
+}
+
+.admin-copy-row > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 /* ── Copy button ── */
