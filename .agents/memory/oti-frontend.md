@@ -10,4 +10,7 @@ description: Brand/theme decisions, API quota tradeoff, logo geometry, and chain
 - Chain/network logos come from `@web3icons/react` (`Network<Name>` components, e.g. `NetworkArbitrumOne` for "arbitrum", `NetworkBinanceSmartChain` for "bsc") — mapped by chain id in `ChainIcon.tsx`. Package is large (~99MB unpacked) but only the used components are bundled by Vite tree-shaking.
 - Layout.tsx wraps ALL routes (including /admin) in `.app-main` which has `max-width: 720px; margin: 0 auto`. Admin panel must override this via `.app-main:has(.admin-shell), .app-main:has(.admin-gate) { max-width: 100%; width: 100%; margin: 0; padding: 0; }` in index.css — already done.
 - Ahmad handles all Git operations himself (push, PR, merge). Never push or open PRs. Build only, then notify when done.
-- PlanConfigs PATCH sends `{ daily_limit, description }` in snake_case — correct. Backend endpoint: PATCH /admin/plan-configs/{plan_name}.
+- PlanConfigs PATCH sends only `{ daily_limit }` (description omitted when empty) — correct. Backend endpoint: PATCH /admin/plan-configs/{plan_name}.
+- GET /api/config/anonymous-limit is a public backend endpoint but returns {"daily_limit":null} even after Plan Configs saves — backend wiring bug (endpoint not reading from plan_configs table, or PATCH not persisting). Frontend fallback hardcoded to 3 (architectural default). Backend Builder must fix.
+- Browser-level scroll (not inner-div): html/body/root use min-height:100%, app-shell has no overflow:hidden, app-main has no overflow-y:auto, navbar is position:sticky top:0. Rate note pinned to bottom via margin-top:auto on .home-rate-note.
+- Admin full-width override: .app-main:has(.admin-shell),.app-main:has(.admin-gate) removes max-width/padding. Already in index.css.
