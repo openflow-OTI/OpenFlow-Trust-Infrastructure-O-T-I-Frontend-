@@ -197,12 +197,7 @@ export function ApiKeys() {
                       ) : '—'}
                     </td>
                     <td>{k.plan}</td>
-                    <td className="admin-td-mono">
-                      <span className="admin-copy-row">
-                        <span>…{k.last4}</span>
-                        <CopyButton value={k.last4} />
-                      </span>
-                    </td>
+                    <td className="admin-td-mono">…{k.last4}</td>
                     <td>{fmt(k.created_at)}</td>
                     <td>{fmt(k.expires_at)}</td>
                     <td>
