@@ -9,8 +9,23 @@ export function ShareButton({ wallet, chain }: ShareButtonProps) {
   const [copied, setCopied] = useState(false)
 
   async function handleShare() {
-    if (copied) return
     const url = `https://otiscore.vercel.app/?wallet=${encodeURIComponent(wallet)}&chain=${encodeURIComponent(chain)}`
+    const shareData = {
+      title: 'OTI Trust Score',
+      text: `Check this wallet's trust score on OTI`,
+      url,
+    }
+
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch {
+        // user cancelled or share failed — fall through to clipboard
+      }
+    }
+
+    // Fallback: copy to clipboard
     try {
       await navigator.clipboard.writeText(url)
     } catch {

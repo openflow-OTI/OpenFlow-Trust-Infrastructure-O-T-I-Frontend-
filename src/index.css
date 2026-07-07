@@ -890,21 +890,21 @@ textarea {
   gap: 0.45rem;
   width: 100%;
   background: none;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.85rem 1.5rem;
   cursor: pointer;
-  color: var(--accent);
+  color: var(--text-dim);
   font-size: 0.95rem;
   font-family: var(--mono);
   letter-spacing: 0.06em;
   font-weight: 600;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 .share-btn:hover {
-  background: var(--accent);
-  color: #000;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .share-btn-icon {

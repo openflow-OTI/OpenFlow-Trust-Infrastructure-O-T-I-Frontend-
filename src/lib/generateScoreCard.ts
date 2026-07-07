@@ -86,11 +86,13 @@ export async function generateScoreCard(params: {
   const W = 640
   const H = 800
   const PAD = 40
+  const SCALE = 2  // render at 2× for crisp output on all screens
 
   const canvas = document.createElement('canvas')
-  canvas.width = W
-  canvas.height = H
+  canvas.width = W * SCALE
+  canvas.height = H * SCALE
   const ctx = canvas.getContext('2d')!
+  ctx.scale(SCALE, SCALE)
 
   // Background
   ctx.fillStyle = '#000000'
