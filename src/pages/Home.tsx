@@ -77,7 +77,10 @@ export function Home() {
       </button>
 
       <div className="results-hero">
-        <div className="results-hero-icon-wrap">
+        <div
+          className="results-hero-icon-wrap"
+          style={{ '--chain-color': chainInfo?.color ?? 'var(--border)' } as React.CSSProperties}
+        >
           <ChainIcon chainId={chain} size={44} />
         </div>
         <div className="results-hero-address-row">
@@ -104,7 +107,10 @@ export function Home() {
             />
           ) : (
             <>
-              <div className="results-score-panel">
+              <div
+                className="results-score-panel"
+                style={{ '--chain-color': chainInfo?.color ?? 'var(--accent)' } as React.CSSProperties}
+              >
                 <ScoreGauge score={scoreQuery.data.score} ringColor={chainInfo?.color} />
                 {(() => {
                   const tier = scoreTier(scoreQuery.data.score)

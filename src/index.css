@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #000000;
-  --surface: #0a0a0a;
-  --surface-2: #101010;
-  --border: #1e1e1e;
+  --bg: #05080f;
+  --surface: #0b0f1a;
+  --surface-2: #0f1520;
+  --border: #1c2535;
   --accent: #00e5a0;
-  --accent-dim: rgba(0, 229, 160, 0.12);
-  --text: #eafff4;
-  --text-dim: #8a9994;
+  --accent-dim: rgba(0, 229, 160, 0.10);
+  --text: #e8f4ff;
+  --text-dim: #7a8fa8;
   --danger: #ff4d5e;
   --danger-dim: rgba(255, 77, 94, 0.12);
   --warning: #ffb020;
@@ -64,7 +64,9 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--bg);
+  background: rgba(5, 8, 15, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
   padding: 0.35rem 1.5rem 0.35rem 0.5rem;
   display: flex;
@@ -182,6 +184,10 @@ textarea {
   margin: 0 0 1rem;
   line-height: 1.25;
   letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #e8f4ff 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .home-subtitle {
@@ -196,6 +202,8 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 2.25rem;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset,
+              0 4px 40px rgba(0,0,0,0.4);
 }
 
 .home-rate-note {
@@ -390,7 +398,7 @@ textarea {
 .wallet-form-submit {
   margin-top: 2rem;
   background: var(--accent);
-  color: #00110a;
+  color: #001a0e;
   border: none;
   border-radius: 0.5rem;
   padding: 0.85rem 1rem;
@@ -398,11 +406,22 @@ textarea {
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-form-submit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%);
+  pointer-events: none;
 }
 
 .wallet-form-submit:hover {
-  opacity: 0.88;
+  opacity: 1;
+  box-shadow: 0 0 24px rgba(0, 229, 160, 0.40), 0 2px 8px rgba(0,0,0,0.4);
 }
 
 /* Results */
@@ -429,11 +448,13 @@ textarea {
   font-weight: 500;
   align-self: flex-start;
   letter-spacing: 0.02em;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .results-back:hover {
   border-color: var(--accent);
+  background: rgba(0, 229, 160, 0.05);
+  box-shadow: 0 0 14px rgba(0, 229, 160, 0.12);
 }
 
 .results-hero {
@@ -445,15 +466,22 @@ textarea {
 }
 
 .results-hero-icon-wrap {
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* fallbacks for browsers without color-mix */
   border: 1px solid var(--border);
-  border-radius: 50%;
   background: var(--surface);
+  box-shadow: none;
+  /* color-mix progressive enhancement */
+  border: 1px solid color-mix(in srgb, var(--chain-color, var(--border)) 35%, var(--border));
+  background: color-mix(in srgb, var(--chain-color, var(--surface)) 6%, var(--surface));
+  box-shadow: 0 0 22px color-mix(in srgb, var(--chain-color, transparent) 18%, transparent);
+  border-radius: 50%;
   flex-shrink: 0;
+  transition: box-shadow 0.3s ease;
 }
 
 .results-hero-address-row {
@@ -519,10 +547,18 @@ textarea {
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
+  /* fallbacks for browsers without color-mix */
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  /* color-mix progressive enhancement */
+  background: color-mix(in srgb, var(--chain-color, var(--surface)) 4%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--chain-color, var(--border)) 25%, var(--border));
+  box-shadow: 0 0 60px color-mix(in srgb, var(--chain-color, transparent) 8%, transparent),
+              inset 0 1px 0 rgba(255,255,255,0.03);
+  border-radius: 14px;
+  padding: 2rem 1.5rem 1.75rem;
+  transition: box-shadow 0.3s ease;
 }
 
 .results-tier-label {
@@ -538,11 +574,12 @@ textarea {
   width: 100%;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025);
 }
 
 .results-signals-heading {
@@ -570,14 +607,15 @@ textarea {
   text-decoration: none;
   font-family: var(--mono);
   letter-spacing: 0.03em;
-  opacity: 0.7;
-  transition: opacity 0.15s ease;
+  opacity: 0.8;
+  transition: opacity 0.15s ease, text-shadow 0.15s ease;
   border-bottom: 1px solid transparent;
 }
 
 .results-report-link:hover {
   opacity: 1;
   border-bottom-color: var(--accent);
+  text-shadow: 0 0 10px rgba(0, 229, 160, 0.45);
 }
 
 /* Task 8 — share wrap (two equal buttons) */
@@ -674,7 +712,7 @@ textarea {
 }
 
 .signal-bar-track {
-  height: 4px;
+  height: 5px;
   border-radius: 999px;
   background: var(--surface-2);
   overflow: hidden;
@@ -683,7 +721,8 @@ textarea {
 .signal-bar-fill {
   height: 100%;
   border-radius: 999px;
-  transition: width 0.4s ease;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 6px currentColor;
 }
 
 
@@ -729,6 +768,7 @@ textarea {
 .cached-badge {
   display: inline-block;
   border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
   color: var(--text-dim);
   font-size: 0.7rem;
   letter-spacing: 0.05em;
@@ -789,9 +829,10 @@ textarea {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 3px solid var(--border);
+  border: 3px solid var(--surface-2);
   border-top-color: var(--accent);
   animation: spin 0.8s linear infinite;
+  box-shadow: 0 0 14px rgba(0, 229, 160, 0.2);
 }
 
 @keyframes spin {
