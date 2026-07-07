@@ -1,15 +1,17 @@
 import { useState, useCallback } from 'react'
 
-export function CopyButton({ value }: { value: string }) {
+export function CopyButton({ value }: { value?: string | null }) {
   const [copied, setCopied] = useState(false)
+  const safe = (value ?? '').trim()
 
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(value).then(() => {
+    if (!safe) return
+    navigator.clipboard.writeText(safe).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     }).catch(() => {
       const el = document.createElement('textarea')
-      el.value = value
+      el.value = safe
       document.body.appendChild(el)
       el.select()
       document.execCommand('copy')
@@ -17,7 +19,9 @@ export function CopyButton({ value }: { value: string }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     })
-  }, [value])
+  }, [safe])
+
+  if (!safe) return null
 
   return (
     <button
