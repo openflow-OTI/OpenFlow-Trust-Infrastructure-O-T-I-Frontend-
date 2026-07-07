@@ -7,16 +7,23 @@ export function useAnonymousLimit() {
     queryFn: async () => {
       const { data, error } = await apiClient.GET('/admin/plan-configs')
       if (error || !data) throw new Error('Could not fetch plan configs')
-      const anon = (data as Array<{ plan_name: string; daily_limit: number | null }>)
-        .find(p => p.plan_name === 'anonymous')
-      if (!anon || anon.daily_limit == null || !Number.isFinite(anon.daily_limit)) {
-        throw new Error('Anonymous plan not found or limit is unlimited')
+
+      // Live API may return camelCase (planName, dailyLimit) or
+      // snake_case (plan_name, daily_limit) — handle both
+      const rows = data as Array<Record<string, unknown>>
+      const anon = rows.find(p =>
+        p['plan_name'] === 'anonymous' || p['planName'] === 'anonymous'
+      )
+      if (!anon) throw new Error('Anonymous plan not found')
+
+      const limit = (anon['daily_limit'] ?? anon['dailyLimit']) as number | null | undefined
+      if (limit == null || !Number.isFinite(limit)) {
+        throw new Error('Limit is unlimited or not set')
       }
-      return anon.daily_limit
+      return limit as number
     },
     // Refresh every 5 minutes so it picks up live DB changes without a redeploy
     staleTime: 5 * 60 * 1000,
-    // Never retry on failure — fall back to static text silently
     retry: false,
   })
 }

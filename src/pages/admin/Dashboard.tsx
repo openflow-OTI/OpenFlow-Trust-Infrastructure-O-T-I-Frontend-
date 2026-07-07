@@ -36,7 +36,7 @@ export function Dashboard() {
         </div>
         <div className="admin-stat-card">
           <span className="admin-stat-value">{s.total_compromised.toLocaleString()}</span>
-          <span className="admin-stat-label">Compromised wallets</span>
+          <span className="admin-stat-label">Flagged wallets (DB total)</span>
         </div>
       </div>
 
