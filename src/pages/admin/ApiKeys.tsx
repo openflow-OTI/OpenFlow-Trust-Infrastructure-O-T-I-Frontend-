@@ -87,11 +87,11 @@ export function ApiKeys() {
       </div>
 
       {newKeySecret && (
-        <div className="key-modal-overlay" onClick={() => setNewKeySecret(null)}>
-          <div className="key-modal" onClick={e => e.stopPropagation()}>
-            <h3 className="key-modal-title">API Key Created</h3>
+        <div className="key-modal-overlay">
+          <div className="key-modal">
+            <h3 className="key-modal-title">Your New API Key</h3>
             <p className="key-modal-warning">
-              ⚠ Copy this key now — it will not be shown again.
+              ⚠ Save this key now — it will never be shown again.
             </p>
             <code className="key-modal-value">{newKeySecret}</code>
             <CopyButton value={newKeySecret} label="Copy Key" className="key-modal-copy-btn" />
@@ -99,7 +99,7 @@ export function ApiKeys() {
               className="admin-btn admin-btn--ghost key-modal-dismiss"
               onClick={() => setNewKeySecret(null)}
             >
-              Dismiss
+              Done
             </button>
           </div>
         </div>
