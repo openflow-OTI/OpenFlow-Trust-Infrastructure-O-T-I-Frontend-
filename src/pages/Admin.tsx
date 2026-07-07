@@ -11,8 +11,9 @@ import { ApiKeys } from './admin/ApiKeys'
 import { QueryHistory } from './admin/QueryHistory'
 import { AdminCache } from './admin/AdminCache'
 import { PlanConfigs } from './admin/PlanConfigs'
+import { CompromisedWallets } from './admin/CompromisedWallets'
 
-type Screen = 'dashboard' | 'keys' | 'history' | 'cache' | 'plans'
+type Screen = 'dashboard' | 'keys' | 'history' | 'cache' | 'plans' | 'flagged'
 
 const SCREENS: { id: Screen; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
@@ -20,6 +21,7 @@ const SCREENS: { id: Screen; label: string }[] = [
   { id: 'history',   label: 'Query History' },
   { id: 'cache',     label: 'Cache' },
   { id: 'plans',     label: 'Plan Configs' },
+  { id: 'flagged',   label: 'Flagged Wallets' },
 ]
 
 export function Admin() {
@@ -121,6 +123,7 @@ export function Admin() {
         {screen === 'history'   && <QueryHistory />}
         {screen === 'cache'     && <AdminCache />}
         {screen === 'plans'     && <PlanConfigs />}
+        {screen === 'flagged'   && <CompromisedWallets />}
       </div>
     </div>
   )
