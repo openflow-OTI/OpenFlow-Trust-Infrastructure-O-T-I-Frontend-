@@ -8,17 +8,17 @@ import {
 } from '@/lib/adminClient'
 import { Dashboard } from './admin/Dashboard'
 import { ApiKeys } from './admin/ApiKeys'
-import { QueryHistory } from './admin/QueryHistory'
 import { AdminCache } from './admin/AdminCache'
 import { PlanConfigs } from './admin/PlanConfigs'
 import { CompromisedWallets } from './admin/CompromisedWallets'
+import { Usage } from './admin/Usage'
 
-type Screen = 'dashboard' | 'keys' | 'history' | 'cache' | 'plans' | 'flagged'
+type Screen = 'dashboard' | 'keys' | 'usage' | 'cache' | 'plans' | 'flagged'
 
 const SCREENS: { id: Screen; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'keys',      label: 'API Keys' },
-  { id: 'history',   label: 'Query History' },
+  { id: 'usage',     label: 'Usage' },
   { id: 'cache',     label: 'Cache' },
   { id: 'plans',     label: 'Plan Configs' },
   { id: 'flagged',   label: 'Flagged Wallets' },
@@ -120,7 +120,7 @@ export function Admin() {
       <div className="admin-body">
         {screen === 'dashboard' && <Dashboard />}
         {screen === 'keys'      && <ApiKeys />}
-        {screen === 'history'   && <QueryHistory />}
+        {screen === 'usage'     && <Usage />}
         {screen === 'cache'     && <AdminCache />}
         {screen === 'plans'     && <PlanConfigs />}
         {screen === 'flagged'   && <CompromisedWallets />}
