@@ -86,8 +86,10 @@ function PlanConfigsInner() {
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'plan-configs'] })
-      // Also refresh the public anonymous-limit so the homepage picks it up immediately
-      qc.invalidateQueries({ queryKey: ['anonymous-limit'] })
+      // Actively refetch (not just invalidate) so the cached value is replaced
+      // immediately — invalidateQueries alone only marks stale and won't fire a
+      // network request when the home page is not currently mounted.
+      qc.refetchQueries({ queryKey: ['anonymous-limit'] })
       setEditId(null)
     },
   })
