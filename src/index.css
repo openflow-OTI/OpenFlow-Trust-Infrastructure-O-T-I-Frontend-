@@ -157,12 +157,6 @@ textarea {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  /* Hide scrollbar visually — scroll still works on results page */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.app-main::-webkit-scrollbar {
-  display: none;
 }
 
 /* Home */
@@ -171,9 +165,9 @@ textarea {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2.5rem;
-  padding: 1.5rem 0;
+  padding: 3rem 0 1.5rem;
 }
 
 .home-intro {
@@ -207,6 +201,8 @@ textarea {
   font-size: 0.78rem;
   margin: 0;
   letter-spacing: 0.01em;
+  margin-top: auto;
+  padding-bottom: 0.5rem;
 }
 
 /* Wallet form */
