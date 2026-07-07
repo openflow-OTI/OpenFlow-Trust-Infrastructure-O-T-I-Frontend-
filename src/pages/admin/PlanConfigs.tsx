@@ -86,8 +86,9 @@ function PlanConfigsInner() {
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'plan-configs'] })
-      // Actively refetch the public limit badge so the homepage shows the new value.
-      qc.refetchQueries({ queryKey: ['anonymous-limit'] })
+      // Mark stale — useAnonymousLimit has refetchOnMount:'always' so the home
+      // page unconditionally re-fetches on next mount, picking up the new number.
+      qc.invalidateQueries({ queryKey: ['anonymous-limit'] })
       // Remove ALL cached score results (including cached 429 errors).
       // useScore has retry:false and no gcTime override, so a 429 returned before
       // the limit change sits in cache for 5 min and blocks fresh lookups even

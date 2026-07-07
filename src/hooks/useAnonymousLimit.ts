@@ -20,9 +20,12 @@ export function useAnonymousLimit() {
       if (limit == null || !Number.isFinite(limit)) return 3
       return limit as number
     },
-    // staleTime: 0 — always refetch on mount so changes made in the admin panel
-    // are reflected immediately the next time the home page is visited.
+    // refetchOnMount: 'always' — unconditionally refetch every time the home
+    // page mounts, so an admin limit change is reflected on the very next visit
+    // regardless of cache state. staleTime: 0 keeps the in-memory value from
+    // being served as "fresh" between mounts.
     staleTime: 0,
+    refetchOnMount: 'always',
     retry: false,
   })
 }
