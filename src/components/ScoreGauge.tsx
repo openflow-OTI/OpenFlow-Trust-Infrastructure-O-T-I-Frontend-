@@ -28,13 +28,13 @@ export function ScoreGauge({ score }: { score: number }) {
           cy={radius}
           r={normalizedRadius}
           fill="none"
-          stroke={color}
+          stroke="#000000"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           transform={`rotate(-90 ${radius} ${radius})`}
-          style={{ transition: 'stroke-dashoffset 0.6s ease, stroke 0.3s ease' }}
+          style={{ transition: 'stroke-dashoffset 0.6s ease', filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.9))' }}
         />
       </svg>
       <div className="score-gauge-value" style={{ color }}>
