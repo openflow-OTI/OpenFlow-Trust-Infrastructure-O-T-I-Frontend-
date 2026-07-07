@@ -53,7 +53,7 @@ export function ApiKeys() {
       }),
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['admin', 'keys'] })
-      setNewKeySecret(data.apiKey)
+      setNewKeySecret(JSON.stringify(data))
       setCreateForm({ owner_address: '', plan: 'free', expires_at: '' })
       setShowCreate(false)
     },
