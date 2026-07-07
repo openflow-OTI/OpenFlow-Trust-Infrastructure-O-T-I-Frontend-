@@ -71,6 +71,8 @@ function roundedRect(
   ctx.closePath()
 }
 
+import { getChainInfo } from './chains'
+
 export async function generateScoreCard(params: {
   score: number
   signals: SignalBreakdown
@@ -79,6 +81,7 @@ export async function generateScoreCard(params: {
   wallet: string
 }): Promise<void> {
   const { score, signals, metadata, chain, wallet } = params
+  const chainColor = getChainInfo(chain)?.color ?? '#00E5A0'
 
   await document.fonts.ready
   const logoImg = await loadImage('/logo.svg')
@@ -158,7 +161,7 @@ export async function generateScoreCard(params: {
   const endAngle = startAngle + (score / 100) * 2 * Math.PI
   ctx.beginPath()
   ctx.arc(ringCx, ringCy, ringR, startAngle, endAngle)
-  ctx.strokeStyle = scoreColor(score)
+  ctx.strokeStyle = chainColor
   ctx.lineWidth = ringLW
   ctx.lineCap = 'round'
   ctx.stroke()

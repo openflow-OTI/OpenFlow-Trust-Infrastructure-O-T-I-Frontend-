@@ -105,7 +105,7 @@ export function Home() {
           ) : (
             <>
               <div className="results-score-panel">
-                <ScoreGauge score={scoreQuery.data.score} />
+                <ScoreGauge score={scoreQuery.data.score} ringColor={chainInfo?.color} />
                 {(() => {
                   const tier = scoreTier(scoreQuery.data.score)
                   return (

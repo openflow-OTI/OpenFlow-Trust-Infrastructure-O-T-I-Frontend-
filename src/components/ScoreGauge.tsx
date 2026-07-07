@@ -1,16 +1,22 @@
+interface ScoreGaugeProps {
+  score: number
+  ringColor?: string
+}
+
 function scoreColor(score: number): string {
   if (score >= 70) return 'var(--accent)'
   if (score >= 40) return 'var(--warning)'
   return 'var(--danger)'
 }
 
-export function ScoreGauge({ score }: { score: number }) {
+export function ScoreGauge({ score, ringColor }: ScoreGaugeProps) {
   const radius = 60
   const stroke = 14
   const normalizedRadius = radius - stroke / 2
   const circumference = 2 * Math.PI * normalizedRadius
   const offset = circumference - (score / 100) * circumference
-  const color = scoreColor(score)
+  const textColor = scoreColor(score)
+  const arcColor = ringColor ?? textColor
 
   return (
     <div className="score-gauge">
@@ -28,16 +34,16 @@ export function ScoreGauge({ score }: { score: number }) {
           cy={radius}
           r={normalizedRadius}
           fill="none"
-          stroke="#000000"
+          stroke={arcColor}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           transform={`rotate(-90 ${radius} ${radius})`}
-          style={{ transition: 'stroke-dashoffset 0.6s ease', filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.9))' }}
+          style={{ transition: 'stroke-dashoffset 0.6s ease, stroke 0.3s ease' }}
         />
       </svg>
-      <div className="score-gauge-value" style={{ color }}>
+      <div className="score-gauge-value" style={{ color: textColor }}>
         <span className="score-gauge-number">{score}</span>
         <span className="score-gauge-percent">%</span>
       </div>
