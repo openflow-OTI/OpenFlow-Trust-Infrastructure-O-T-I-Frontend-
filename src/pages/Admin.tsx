@@ -6,30 +6,33 @@ import {
   probeAdminSecret,
   registerUnauthorizedHandler,
 } from '@/lib/adminClient'
-import { Dashboard } from './admin/Dashboard'
-import { ApiKeys } from './admin/ApiKeys'
-import { AdminCache } from './admin/AdminCache'
-import { PlanConfigs } from './admin/PlanConfigs'
+import { Dashboard }          from './admin/Dashboard'
+import { ApiKeys }            from './admin/ApiKeys'
+import { Usage }              from './admin/Usage'
+import { QueryHistory }       from './admin/QueryHistory'
+import { AdminCache }         from './admin/AdminCache'
+import { PlanConfigs }        from './admin/PlanConfigs'
 import { CompromisedWallets } from './admin/CompromisedWallets'
-import { Usage } from './admin/Usage'
 
-type Screen = 'dashboard' | 'keys' | 'usage' | 'cache' | 'plans' | 'flagged'
+type Screen = 'dashboard' | 'keys' | 'usage' | 'history' | 'cache' | 'plans' | 'flagged'
 
-const SCREENS: { id: Screen; label: string }[] = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'keys',      label: 'API Keys' },
-  { id: 'usage',     label: 'Usage' },
-  { id: 'cache',     label: 'Cache' },
-  { id: 'plans',     label: 'Plan Configs' },
-  { id: 'flagged',   label: 'Flagged Wallets' },
+const SCREENS: { id: Screen; label: string; icon: string }[] = [
+  { id: 'dashboard', label: 'Dashboard',       icon: '▦' },
+  { id: 'keys',      label: 'API Keys',         icon: '⚿' },
+  { id: 'usage',     label: 'Usage',            icon: '◈' },
+  { id: 'history',   label: 'Query History',    icon: '◷' },
+  { id: 'cache',     label: 'Cache',            icon: '⟳' },
+  { id: 'plans',     label: 'Plan Configs',     icon: '◧' },
+  { id: 'flagged',   label: 'Flagged Wallets',  icon: '⚑' },
 ]
 
 export function Admin() {
   const [unlocked, setUnlocked] = useState(false)
-  const [input, setInput] = useState('')
-  const [denied, setDenied] = useState(false)
-  const [probing, setProbing] = useState(false)
-  const [screen, setScreen] = useState<Screen>('dashboard')
+  const [input,    setInput]    = useState('')
+  const [denied,   setDenied]   = useState(false)
+  const [probing,  setProbing]  = useState(false)
+  const [screen,   setScreen]   = useState<Screen>('dashboard')
+  const [navOpen,  setNavOpen]  = useState(false)
 
   const lock = useCallback(() => {
     clearAdminSecret()
@@ -38,12 +41,8 @@ export function Admin() {
     setDenied(false)
   }, [])
 
-  // Register auto-lock handler for any 401 returned during a session
-  useEffect(() => {
-    registerUnauthorizedHandler(lock)
-  }, [lock])
+  useEffect(() => { registerUnauthorizedHandler(lock) }, [lock])
 
-  // If a secret is already in sessionStorage, probe it — don't trust it blindly
   useEffect(() => {
     const stored = getAdminSecret()
     if (!stored) return
@@ -71,59 +70,107 @@ export function Admin() {
     setProbing(false)
   }
 
+  function navigate(id: Screen) {
+    setScreen(id)
+    setNavOpen(false)
+  }
+
   if (!unlocked) {
     return (
       <div className="admin-gate">
-        <h1 className="admin-gate-title">Admin Panel</h1>
+        <div className="admin-gate-logo">OTI Admin</div>
+        <p className="admin-gate-sub">OpenFlow Trust Infrastructure</p>
         <form className="admin-gate-form" onSubmit={handleUnlock}>
-          <input type="text" name="username" autoComplete="username" style={{ display: 'none' }} readOnly value="admin" />
-          <input
-            className="admin-input"
-            type="password"
-            placeholder="Enter admin secret"
-            autoComplete="current-password"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            disabled={probing}
-            autoFocus
-          />
-          <button className="admin-btn admin-btn--primary" type="submit" disabled={probing}>
-            {probing ? 'Checking…' : 'Unlock'}
+          <input type="text" name="username" autoComplete="username"
+            style={{ display: 'none' }} readOnly value="admin" />
+          <div className="admin-gate-field">
+            <label className="admin-gate-label">Admin Secret</label>
+            <input
+              className="admin-input"
+              type="password"
+              placeholder="Enter your admin secret…"
+              autoComplete="current-password"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              disabled={probing}
+              autoFocus
+            />
+          </div>
+          <button className="admin-btn admin-btn--primary admin-btn--lg"
+            type="submit" disabled={probing}>
+            {probing ? 'Verifying…' : 'Unlock panel'}
           </button>
-          {denied && <p className="admin-error">Access denied — wrong secret.</p>}
+          {denied && <p className="admin-error admin-gate-error">Wrong secret — access denied.</p>}
         </form>
       </div>
     )
   }
 
+  const current = SCREENS.find(s => s.id === screen)!
+
   return (
-    <div className="admin-page">
-      <div className="admin-header">
-        <span className="admin-header-title">OTI Admin</span>
-        <button className="admin-btn admin-btn--ghost" onClick={lock}>
-          Lock
-        </button>
-      </div>
+    <div className="admin-shell">
 
-      <nav className="admin-nav">
-        {SCREENS.map(s => (
-          <button
-            key={s.id}
-            className={`admin-nav-btn${screen === s.id ? ' admin-nav-btn--active' : ''}`}
-            onClick={() => setScreen(s.id)}
-          >
-            {s.label}
+      {/* Mobile overlay */}
+      {navOpen && <div className="admin-overlay" onClick={() => setNavOpen(false)} />}
+
+      {/* Sidebar */}
+      <aside className={`admin-sidebar${navOpen ? ' admin-sidebar--open' : ''}`}>
+        <div className="admin-sidebar-brand">
+          <span className="admin-sidebar-brand-name">OTI Admin</span>
+          <span className="admin-sidebar-brand-sub">OpenFlow Trust Infrastructure</span>
+        </div>
+
+        <nav className="admin-sidebar-nav">
+          {SCREENS.map(s => (
+            <button
+              key={s.id}
+              className={`admin-nav-item${screen === s.id ? ' admin-nav-item--active' : ''}`}
+              onClick={() => navigate(s.id)}
+            >
+              <span className="admin-nav-icon">{s.icon}</span>
+              <span>{s.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="admin-sidebar-footer">
+          <button className="admin-btn admin-btn--ghost admin-btn--lock" onClick={lock}>
+            🔒 Lock panel
           </button>
-        ))}
-      </nav>
+        </div>
+      </aside>
 
-      <div className="admin-body">
-        {screen === 'dashboard' && <Dashboard />}
-        {screen === 'keys'      && <ApiKeys />}
-        {screen === 'usage'     && <Usage />}
-        {screen === 'cache'     && <AdminCache />}
-        {screen === 'plans'     && <PlanConfigs />}
-        {screen === 'flagged'   && <CompromisedWallets />}
+      {/* Main area */}
+      <div className="admin-main">
+
+        {/* Mobile topbar */}
+        <header className="admin-topbar">
+          <button className="admin-hamburger" onClick={() => setNavOpen(v => !v)}
+            aria-label="Toggle navigation">
+            <span /><span /><span />
+          </button>
+          <span className="admin-topbar-title">{current.label}</span>
+          <button className="admin-topbar-lock" onClick={lock} aria-label="Lock panel">🔒</button>
+        </header>
+
+        {/* Desktop page header */}
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-page-title">{current.label}</h1>
+            <p className="admin-page-breadcrumb">OTI Admin / {current.label}</p>
+          </div>
+        </div>
+
+        <div className="admin-content">
+          {screen === 'dashboard' && <Dashboard />}
+          {screen === 'keys'      && <ApiKeys />}
+          {screen === 'usage'     && <Usage />}
+          {screen === 'history'   && <QueryHistory />}
+          {screen === 'cache'     && <AdminCache />}
+          {screen === 'plans'     && <PlanConfigs />}
+          {screen === 'flagged'   && <CompromisedWallets />}
+        </div>
       </div>
     </div>
   )
