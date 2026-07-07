@@ -86,6 +86,8 @@ function PlanConfigsInner() {
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'plan-configs'] })
+      // Also refresh the public anonymous-limit so the homepage picks it up immediately
+      qc.invalidateQueries({ queryKey: ['anonymous-limit'] })
       setEditId(null)
     },
   })
@@ -119,10 +121,11 @@ function PlanConfigsInner() {
       }
       daily_limit = n
     }
-    editMutation.mutate({
-      planName: getPlanName(cfg),
-      body: { daily_limit, description: editForm.description },
-    })
+    // Only send description if the user actually typed something
+    const body: { daily_limit: number | null; description?: string } = { daily_limit }
+    if (editForm.description.trim()) body.description = editForm.description.trim()
+
+    editMutation.mutate({ planName: getPlanName(cfg), body })
   }
 
   if (configs.isLoading) return <p className="admin-loading">Loading plan configs…</p>
