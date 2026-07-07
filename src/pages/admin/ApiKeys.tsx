@@ -14,7 +14,7 @@ interface ApiKey {
 }
 
 interface ApiKeyCreated extends ApiKey {
-  apiKey: string
+  api_key: string
 }
 
 function fmt(ts?: string | null) {
@@ -53,7 +53,7 @@ export function ApiKeys() {
       }),
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['admin', 'keys'] })
-      setNewKeySecret(JSON.stringify(data))
+      setNewKeySecret(data.api_key)
       setCreateForm({ owner_address: '', plan: 'free', expires_at: '' })
       setShowCreate(false)
     },
