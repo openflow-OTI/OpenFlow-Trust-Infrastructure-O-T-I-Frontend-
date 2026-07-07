@@ -36,15 +36,15 @@ export function Dashboard() {
         <>
           <div className="admin-stat-grid">
             <div className="admin-stat-card">
-              <span className="admin-stat-value">{stats.data.today_requests.toLocaleString()}</span>
+              <span className="admin-stat-value">{(stats.data.today_requests ?? 0).toLocaleString()}</span>
               <span className="admin-stat-label">Requests today</span>
             </div>
             <div className="admin-stat-card">
-              <span className="admin-stat-value">{stats.data.total_keys.toLocaleString()}</span>
+              <span className="admin-stat-value">{(stats.data.total_keys ?? 0).toLocaleString()}</span>
               <span className="admin-stat-label">Active API keys</span>
             </div>
             <div className="admin-stat-card">
-              <span className="admin-stat-value">{stats.data.total_compromised.toLocaleString()}</span>
+              <span className="admin-stat-value">{(stats.data.total_compromised ?? 0).toLocaleString()}</span>
               <span className="admin-stat-label">Flagged wallets (DB total)</span>
             </div>
           </div>
@@ -64,7 +64,7 @@ export function Dashboard() {
                     {stats.data.requests_by_plan.map(row => (
                       <tr key={row.plan_name}>
                         <td>{row.plan_name}</td>
-                        <td>{row.req_count.toLocaleString()}</td>
+                        <td>{(row.req_count ?? 0).toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>

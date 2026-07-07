@@ -124,7 +124,7 @@ export function Usage() {
                     <td className="admin-td-mono">{row.key_ref}</td>
                     <td>{row.plan_name}</td>
                     <td>{row.usage_date}</td>
-                    <td>{row.req_count.toLocaleString()}</td>
+                    <td>{(row.req_count ?? 0).toLocaleString()}</td>
                   </tr>
                 ))}
                 {usage.data.length === 0 && (
