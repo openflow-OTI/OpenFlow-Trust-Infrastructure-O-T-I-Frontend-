@@ -920,6 +920,19 @@ textarea {
   margin: 0 0 1.5rem;
   font-size: 0.9rem;
   color: var(--text-dim);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.whitepaper-read-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .whitepaper-header-ctas {

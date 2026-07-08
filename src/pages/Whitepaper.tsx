@@ -254,7 +254,10 @@ export function Whitepaper() {
         <div className="whitepaper-header-watermark" aria-hidden="true" />
         <div className="marketing-container whitepaper-header-inner">
           <h1 className="whitepaper-title">OpenFlow Trust Infrastructure — Whitepaper</h1>
-          <p className="whitepaper-subtitle">Version 1.0 · July 2026 · OpenFlow Labs</p>
+          <p className="whitepaper-subtitle">
+            Version 1.0 · July 2026 · OpenFlow Labs
+            <span className="whitepaper-read-time" aria-label="Estimated read time">· ~16 min read</span>
+          </p>
           <div className="whitepaper-header-ctas">
             <button type="button" className="marketing-btn marketing-btn--outline" onClick={handlePrint}>
               Download PDF
