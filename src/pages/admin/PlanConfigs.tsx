@@ -84,21 +84,8 @@ function PlanConfigsInner() {
         method: 'PATCH',
         body: JSON.stringify(body),
       }),
-    onSuccess: (updatedConfig) => {
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'plan-configs'] })
-
-      // The PATCH response already contains the updated daily_limit.
-      // Write it directly into the home-page cache — no GET refetch needed,
-      // no server-side or edge caching to fight.
-      if (getPlanName(updatedConfig).trim().toLowerCase() === 'anonymous') {
-        const raw = getLimit(updatedConfig)
-        const coerced = Number(raw)
-        const newLimit = (raw == null || !Number.isFinite(coerced) || coerced < 0)
-          ? 3
-          : Math.floor(coerced)
-        qc.setQueryData(['anonymous-limit'], newLimit)
-      }
-
       qc.removeQueries({ queryKey: ['score'] })
       setEditId(null)
     },
@@ -137,7 +124,20 @@ function PlanConfigsInner() {
     const body: { daily_limit: number | null; description?: string } = { daily_limit }
     if (editForm.description.trim()) body.description = editForm.description.trim()
 
-    editMutation.mutate({ planName: getPlanName(cfg), body })
+    editMutation.mutate(
+      { planName: getPlanName(cfg), body },
+      {
+        onSuccess: () => {
+          // cfg and daily_limit are guaranteed fresh here — no PATCH response
+          // parsing needed, no guess work about field names.
+          if (getPlanName(cfg).trim().toLowerCase() === 'anonymous') {
+            // null daily_limit means Unlimited; fall back to 3 for display
+            const newLimit = daily_limit === null ? 3 : daily_limit
+            qc.setQueryData(['anonymous-limit'], newLimit)
+          }
+        },
+      },
+    )
   }
 
   return (
