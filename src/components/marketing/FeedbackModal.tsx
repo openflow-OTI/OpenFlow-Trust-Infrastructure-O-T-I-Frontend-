@@ -32,11 +32,11 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
       }
       if (e.key === 'Tab') {
         const focusables = [closeBtnRef.current, emailLinkRef.current].filter(
-          (el): el is HTMLElement => el !== null,
+          (el): el is HTMLButtonElement | HTMLAnchorElement => el !== null,
         )
         if (focusables.length === 0) return
-        const first = focusables[0]
-        const last = focusables[focusables.length - 1]
+        const first = focusables[0]!
+        const last = focusables[focusables.length - 1]!
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault()
           last.focus()
