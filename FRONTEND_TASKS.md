@@ -82,6 +82,10 @@ Completed July 8, 2026 (initial build + one polish round). Logo, wordmark, tagli
 Completed July 8, 2026. Root cause: `setEditId(null)` inside the admin mutation's `onSuccess` raced with React 18 automatic batching and unmounted the edit row before the success banner (and its cache invalidation) could be trusted. Fixed by keeping the edit row open until the user clicks "Done" instead of auto-closing on success.
 *(Recorded per Manager's report — the described fix and its explanatory comment are confirmed present in `src/pages/admin/PlanConfigs.tsx`; live Vercel behavior verification by Ahmad not independently confirmed by this Builder.)*
 
+### Task 8D — Homepage Visual Polish: Contrast, Animated CTA, Spacing & Density ✅
+Completed July 8, 2026. Fixed placeholder contrast, rebuilt the "Try an example" moving border from a paint-triggering animated @property-driven conic-gradient to a GPU-cheap transform-based rotation (no jank), corrected oversized/zoom sizing, added breathing room between sections, and established a clear typographic hierarchy. Verified live by Ahmad via screen recording — confirmed working normally and looking good.
+*(Recorded per Manager's report — not independently verified by this Builder against the live site or local diff.)*
+
 ---
 
 ## Pending
@@ -93,27 +97,26 @@ Backend Builder verifying `daily_limit` enforcement across all plan types (free,
 
 ## Active
 
-### 🔄 Task 8D — Homepage Visual Polish: Contrast, Animated CTA, Spacing & Density
-**Priority:** HIGH
-**Depends on:** Task 8B ✅, Task 8C ✅ — both done
+### 🔄 Task 8E — Disable Mobile Pinch/Double-Tap Zoom Across the App
+**Priority:** MEDIUM — polish/UX consistency, not a functional bug
+**Depends on:** Task 8D ✅ (done)
 
-**Context:** A previous Builder started this task and hit their account's credit limit mid-way. Ahmad pushed their in-progress work live to Vercel, so it's already partially done in production — but incomplete, with a new animation-jank problem. Pull up the live site and the current index.css/Home.tsx and see what's actually there before changing anything — don't assume a blank slate.
+**Why:** Ahmad found that on mobile, users can pinch-zoom and double-tap-zoom every page — homepage, results/scoring page, and admin dashboard. This fights against the carefully sized mobile layout already shipped in Task 8D. Needs to be disabled on mobile only. Desktop zoom (Ctrl+/-, Ctrl+scroll, browser zoom controls) must be completely unaffected.
 
-**Files:** `src/index.css`, and `src/pages/Home.tsx` only if animation markup needs restructuring (no logic changes).
-**Do not touch:** `src/lib/scoring.ts`, `nixpacks.toml`, `vercel.json`, the chain selector, or `useAnonymousLimit.ts`/the admin mutation logic (Task 8C, already fixed and verified — leave it alone).
+**Files you will likely touch:**
+- index.html (the `<meta name="viewport">` tag)
+- Possibly src/index.css (a touch-action backstop, only if needed)
 
-**What to fix, in order:**
+**Do NOT touch:** `src/lib/scoring.ts`, `nixpacks.toml`, `vercel.json`, anything already fixed in Task 8C/8D.
 
-1. Placeholder text contrast: the wallet address input's placeholder ("0x… or wallet address") is dim grey and hard to read. Make it white/near-white via `::placeholder`, distinct from typed text only through opacity, not a different color.
+**What to build:**
+1. Update the viewport meta tag to: `width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`
+2. Since this is one SPA served from one index.html, this should cover the homepage, results page, and admin dashboard in a single change — verify that's actually true for this codebase (check there's no separate HTML entry point for admin) rather than assuming it.
+3. If double-tap-to-zoom still works on iOS Safari after that (a known iOS quirk where `user-scalable=no` isn't always fully honored), add `touch-action: manipulation` as a CSS backstop on html/body — test first that this doesn't break the chain selector dropdown or admin table scrolling.
+4. Confirm desktop zoom (Ctrl+/-, Ctrl+scroll) is completely unaffected after your changes — viewport meta and touch-action only affect mobile touch gestures, but verify it explicitly.
 
-2. "Try an example →" link: text must be white. Ahmad wants a thin, continuously moving mint-green line tracing around the text — always alive, eye-catching. The current live version has this but causes real lag on mobile. Keep the effect, fix the performance: rebuild using only GPU-cheap transform-based animation (e.g. rotate a conic-gradient pseudo-element, clipped to a thin ring via mask/-webkit-mask). Never animate box-shadow, filter, backdrop-filter, or width/height every frame — that's almost certainly the current cause of the jank. Respect `prefers-reduced-motion`. Test on a throttled mobile CPU profile in Chrome DevTools (4x slowdown) before calling this done — zero visible stutter. Same mint green as everywhere else, no new color.
-
-3. Zoom/oversized content: current live page still looks too large/zoomed on mobile (375-414px). Go element by element — logo, wordmark, tagline, input, buttons, badges, icons, paddings, margins — and reduce consistently at the mobile breakpoint so the whole page fits a 375×812 viewport comfortably without scrolling and without looking oversized. Don't do a partial pass; verify each element against the live screenshot.
-
-4. Spacing: current layout is cramped, especially the gap between the "free lookups/day" badge and the WOR links/buttons below it. Increase spacing between every major block (header → input card → rate-limit badge → WOR links → footer). Treat this together with #3 — reclaim space from the size reduction and redistribute it as breathing room; the page must still fit one screen without scrolling.
-
-5. Typography hierarchy: not everything should be the same size. Primary (largest): "OTI" wordmark, "Check trust score" button. Secondary (medium): tagline, input text. Tertiary (small, muted): field labels, rate-limit badge, footer, WOR links. Increase primary/secondary where too small; keep tertiary compact.
-
-**Constraints:** all CSS in `src/index.css`, no new libraries, black background + existing mint green system only, works on both mobile (375px) and desktop.
-
-**Definition of done:** placeholder is readable, example-link animation is smooth on a throttled mobile profile with zero jank, page fits 375×812 without feeling zoomed, clear spacing between sections, clear typographic hierarchy. Screenshot the result on a simulated 375px viewport and report back before marking done.
+**Definition of done:**
+- On mobile emulation (touch simulation on), pinch and double-tap zoom no longer work on the homepage, results/scoring view, and admin dashboard
+- Desktop zoom still works exactly as before
+- No regressions to chain selector or admin table scrolling
+- Report back confirming you tested all three views on mobile emulation and confirmed desktop is unaffected, before marking done
