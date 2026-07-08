@@ -207,6 +207,7 @@ export function Whitepaper() {
   const [tocOpen, setTocOpen] = useState(false)
   const [activeId, setActiveId] = useState<string>(SECTIONS[0].id)
   const [showBackTop, setShowBackTop] = useState(false)
+  const [readProgress, setReadProgress] = useState(0)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
@@ -237,6 +238,10 @@ export function Whitepaper() {
   useEffect(() => {
     function onScroll() {
       setShowBackTop(window.scrollY > 400)
+      const el = document.documentElement
+      const scrolled = el.scrollTop || document.body.scrollTop
+      const total = el.scrollHeight - el.clientHeight
+      setReadProgress(total > 0 ? Math.min(100, (scrolled / total) * 100) : 0)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -248,6 +253,7 @@ export function Whitepaper() {
 
   return (
     <div className="marketing-page whitepaper-page">
+      <div className="whitepaper-progress-bar" style={{ width: `${readProgress}%` }} aria-hidden="true" />
       <MarketingNavbar />
 
       <header className="whitepaper-header">

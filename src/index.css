@@ -1224,7 +1224,20 @@ textarea {
   box-shadow: 0 0 16px rgba(0, 229, 160, 0.2);
 }
 
+.whitepaper-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 100;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(0, 229, 160, 0.5);
+  pointer-events: none;
+}
+
 @media print {
+  .whitepaper-progress-bar,
   .whitepaper-back-top {
     display: none !important;
   }
