@@ -21,178 +21,185 @@ const SECTIONS: Section[] = [
   { id: 'distribution', number: '09', title: 'Distribution' },
   { id: 'revenue-model', number: '10', title: 'Revenue Model' },
   { id: 'openflow-vision', number: '11', title: 'The OpenFlow Vision' },
-  { id: 'roadmap', number: '12', title: 'Roadmap' },
-  { id: 'team', number: '13', title: 'Team' },
-  { id: 'contact-links', number: '14', title: 'Contact & Links' },
+  { id: 'team', number: '12', title: 'Team' },
+  { id: 'contact-links', number: '13', title: 'Contact & Links' },
 ]
 
 function SignalTable() {
   return (
-    <table className="whitepaper-table">
-      <thead>
-        <tr>
-          <th scope="col">Signal</th>
-          <th scope="col">Weight</th>
-          <th scope="col">What It Measures</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Wallet Age</td>
-          <td>25%</td>
-          <td>How long this wallet has been active on-chain</td>
-        </tr>
-        <tr>
-          <td>Transaction Count</td>
-          <td>20%</td>
-          <td>Volume and frequency of lifetime transactions</td>
-        </tr>
-        <tr>
-          <td>Token Holding Behavior</td>
-          <td>20%</td>
-          <td>Diversity and quality of tokens held over time</td>
-        </tr>
-        <tr>
-          <td>Smart Contract Interactions</td>
-          <td>20%</td>
-          <td>Depth of DeFi and protocol engagement</td>
-        </tr>
-        <tr>
-          <td>Transaction Timing Patterns</td>
-          <td>15%</td>
-          <td>Consistency and naturalness of activity over time</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="whitepaper-table-wrap">
+      <table className="whitepaper-table">
+        <thead>
+          <tr>
+            <th scope="col">Signal</th>
+            <th scope="col">Weight</th>
+            <th scope="col">What It Measures</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Wallet Age</td>
+            <td>25%</td>
+            <td>How long this wallet has been active on-chain</td>
+          </tr>
+          <tr>
+            <td>Transaction Count</td>
+            <td>20%</td>
+            <td>Volume and frequency of lifetime transactions</td>
+          </tr>
+          <tr>
+            <td>Token Holding Behavior</td>
+            <td>20%</td>
+            <td>Diversity and quality of tokens held over time</td>
+          </tr>
+          <tr>
+            <td>Smart Contract Interactions</td>
+            <td>20%</td>
+            <td>Depth of DeFi and protocol engagement</td>
+          </tr>
+          <tr>
+            <td>Transaction Timing Patterns</td>
+            <td>15%</td>
+            <td>Consistency and naturalness of activity over time</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   )
 }
 
 function TierTable() {
   return (
-    <table className="whitepaper-table">
-      <thead>
-        <tr>
-          <th scope="col">Score</th>
-          <th scope="col">Label</th>
-          <th scope="col">Meaning</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>85 – 100</td>
-          <td>HIGHLY TRUSTED</td>
-          <td>Long-established, organically active wallet</td>
-        </tr>
-        <tr>
-          <td>65 – 84</td>
-          <td>TRUSTED</td>
-          <td>Solid behavioral history, low risk</td>
-        </tr>
-        <tr>
-          <td>45 – 64</td>
-          <td>CAUTION</td>
-          <td>Moderate history, proceed carefully</td>
-        </tr>
-        <tr>
-          <td>25 – 44</td>
-          <td>SUSPICIOUS</td>
-          <td>Thin history or unusual patterns</td>
-        </tr>
-        <tr>
-          <td>0 – 24</td>
-          <td>HIGH RISK</td>
-          <td>New, inactive, or behaviorally anomalous</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="whitepaper-table-wrap">
+      <table className="whitepaper-table">
+        <thead>
+          <tr>
+            <th scope="col">Score</th>
+            <th scope="col">Label</th>
+            <th scope="col">Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>85 – 100</td>
+            <td>HIGHLY TRUSTED</td>
+            <td>Long-established, organically active wallet</td>
+          </tr>
+          <tr>
+            <td>65 – 84</td>
+            <td>TRUSTED</td>
+            <td>Solid behavioral history, low risk</td>
+          </tr>
+          <tr>
+            <td>45 – 64</td>
+            <td>CAUTION</td>
+            <td>Moderate history, proceed carefully</td>
+          </tr>
+          <tr>
+            <td>25 – 44</td>
+            <td>SUSPICIOUS</td>
+            <td>Thin history or unusual patterns</td>
+          </tr>
+          <tr>
+            <td>0 – 24</td>
+            <td>HIGH RISK</td>
+            <td>New, inactive, or behaviorally anomalous</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   )
 }
 
 function RevenueTable() {
   return (
-    <table className="whitepaper-table">
-      <thead>
-        <tr>
-          <th scope="col">Tier</th>
-          <th scope="col">Access</th>
-          <th scope="col">Limit</th>
-          <th scope="col">Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Anonymous</td>
-          <td>No key required</td>
-          <td>3 lookups/day</td>
-          <td>Free</td>
-        </tr>
-        <tr>
-          <td>Developer</td>
-          <td>API key</td>
-          <td>Higher daily limit</td>
-          <td>Free</td>
-        </tr>
-        <tr>
-          <td>Pro</td>
-          <td>API key</td>
-          <td>High volume</td>
-          <td>Paid (planned)</td>
-        </tr>
-        <tr>
-          <td>Enterprise</td>
-          <td>Direct contract</td>
-          <td>Unlimited + SLA</td>
-          <td>Custom pricing</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="whitepaper-table-wrap">
+      <table className="whitepaper-table">
+        <thead>
+          <tr>
+            <th scope="col">Tier</th>
+            <th scope="col">Access</th>
+            <th scope="col">Limit</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Anonymous</td>
+            <td>No key required</td>
+            <td>3 lookups/day</td>
+            <td>Free</td>
+          </tr>
+          <tr>
+            <td>Developer</td>
+            <td>API key</td>
+            <td>Higher daily limit</td>
+            <td>Free</td>
+          </tr>
+          <tr>
+            <td>Pro</td>
+            <td>API key</td>
+            <td>High volume</td>
+            <td>Paid (planned)</td>
+          </tr>
+          <tr>
+            <td>Enterprise</td>
+            <td>Direct contract</td>
+            <td>Unlimited + SLA</td>
+            <td>Custom pricing</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   )
 }
 
 function ContactTable() {
   return (
-    <table className="whitepaper-table">
-      <thead>
-        <tr>
-          <th scope="col">Resource</th>
-          <th scope="col">Link</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Score a Wallet</td>
-          <td><code>https://otiscore.vercel.app/score</code></td>
-        </tr>
-        <tr>
-          <td>API Documentation</td>
-          <td><code>https://docs.otiscore.vercel.app</code> (use <code>#</code> with "Coming soon" tooltip until Task 11 is live)</td>
-        </tr>
-        <tr>
-          <td>GitHub</td>
-          <td>[Ahmad to provide — public frontend repo URL]</td>
-        </tr>
-        <tr>
-          <td>Telegram Bot</td>
-          <td>[Ahmad to provide — Telegram bot invite link, available after Task 12 ships] (use <code>#</code> + "Coming soon" tooltip until then)</td>
-        </tr>
-        <tr>
-          <td>Discord Bot</td>
-          <td>[Ahmad to provide — Discord bot invite link, available after Task 13 ships] (use <code>#</code> + "Coming soon" tooltip until then)</td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td>[Ahmad to provide — company email address]</td>
-        </tr>
-        <tr>
-          <td>Twitter / X</td>
-          <td>[Ahmad to provide — Twitter/X profile link]</td>
-        </tr>
-        <tr>
-          <td>Crisp Chat</td>
-          <td>Embedded widget (bottom right of every page)</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="whitepaper-table-wrap">
+      <table className="whitepaper-table">
+        <thead>
+          <tr>
+            <th scope="col">Resource</th>
+            <th scope="col">Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Score a Wallet</td>
+            <td><code>https://otiscore.vercel.app/score</code></td>
+          </tr>
+          <tr>
+            <td>API Documentation</td>
+            <td><code>https://docs.otiscore.vercel.app</code> (use <code>#</code> with "Coming soon" tooltip until Task 11 is live)</td>
+          </tr>
+          <tr>
+            <td>GitHub</td>
+            <td>[Ahmad to provide — public frontend repo URL]</td>
+          </tr>
+          <tr>
+            <td>Telegram Bot</td>
+            <td>[Ahmad to provide — Telegram bot invite link, available after Task 12 ships] (use <code>#</code> + "Coming soon" tooltip until then)</td>
+          </tr>
+          <tr>
+            <td>Discord Bot</td>
+            <td>[Ahmad to provide — Discord bot invite link, available after Task 13 ships] (use <code>#</code> + "Coming soon" tooltip until then)</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>[Ahmad to provide — company email address]</td>
+          </tr>
+          <tr>
+            <td>Twitter / X</td>
+            <td>[Ahmad to provide — Twitter/X profile link]</td>
+          </tr>
+          <tr>
+            <td>Crisp Chat</td>
+            <td>Embedded widget (bottom right of every page)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   )
 }
 
@@ -563,40 +570,8 @@ export function Whitepaper() {
             </p>
           </section>
 
-          <section id="roadmap" className="whitepaper-section">
-            <h2><span className="whitepaper-section-number">12</span> Roadmap</h2>
-            <p><em>Near-term (MVP phase — in progress):</em></p>
-            <ul>
-              <li>Admin endpoint security</li>
-              <li>Score history served from database</li>
-              <li>Weighted signal scores in API response</li>
-              <li>Professional results page redesign</li>
-            </ul>
-            <p><em>Short-term (pre-distribution):</em></p>
-            <ul>
-              <li>Marketing homepage and Whitepaper page (this document)</li>
-              <li>Developer documentation site</li>
-              <li>Admin management panel</li>
-            </ul>
-            <p><em>Medium-term (distribution):</em></p>
-            <ul>
-              <li>Telegram bot</li>
-              <li>Discord bot</li>
-              <li>Embeddable JavaScript widget</li>
-              <li>Browser extension (Firefox first, then Chrome)</li>
-            </ul>
-            <p><em>Long-term:</em></p>
-            <ul>
-              <li>Wallet Ownership Registry (WOR) — self-serve compromise reporting</li>
-              <li>Developer self-serve monetization portal</li>
-              <li>Pro and Enterprise plan tiers</li>
-              <li>FLOW ecosystem integration</li>
-              <li>BSC, Base, and Optimism chain support unlock</li>
-            </ul>
-          </section>
-
           <section id="team" className="whitepaper-section">
-            <h2><span className="whitepaper-section-number">13</span> Team</h2>
+            <h2><span className="whitepaper-section-number">12</span> Team</h2>
             <h3>Ahmad Alhassan (Dan Shila)</h3>
             <p><em>Co-Founder & Chief Executive Officer</em></p>
             <p>
@@ -615,7 +590,7 @@ export function Whitepaper() {
           </section>
 
           <section id="contact-links" className="whitepaper-section">
-            <h2><span className="whitepaper-section-number">14</span> Contact & Links</h2>
+            <h2><span className="whitepaper-section-number">13</span> Contact & Links</h2>
             <ContactTable />
           </section>
         </main>
