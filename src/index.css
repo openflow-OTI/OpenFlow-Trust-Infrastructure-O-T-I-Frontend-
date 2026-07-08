@@ -1178,6 +1178,45 @@ textarea {
   }
 }
 
+.whitepaper-back-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 40;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.whitepaper-back-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.whitepaper-back-top:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(0, 229, 160, 0.2);
+}
+
+@media print {
+  .whitepaper-back-top {
+    display: none !important;
+  }
+}
+
 /* Print — clean A4 whitepaper export, nav/sidebar/footer hidden */
 @media print {
   .marketing-navbar,

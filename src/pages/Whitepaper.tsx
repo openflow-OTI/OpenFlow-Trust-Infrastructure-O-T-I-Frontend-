@@ -206,6 +206,7 @@ function ContactTable() {
 export function Whitepaper() {
   const [tocOpen, setTocOpen] = useState(false)
   const [activeId, setActiveId] = useState<string>(SECTIONS[0].id)
+  const [showBackTop, setShowBackTop] = useState(false)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
@@ -231,6 +232,14 @@ export function Whitepaper() {
     return () => {
       observerRef.current?.disconnect()
     }
+  }, [])
+
+  useEffect(() => {
+    function onScroll() {
+      setShowBackTop(window.scrollY > 400)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   function handlePrint() {
@@ -624,6 +633,15 @@ export function Whitepaper() {
       </div>
 
       <MarketingFooter />
+
+      <button
+        type="button"
+        className={`whitepaper-back-top ${showBackTop ? 'is-visible' : ''}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Back to top"
+      >
+        ↑
+      </button>
     </div>
   )
 }
