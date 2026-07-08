@@ -536,42 +536,51 @@ textarea {
 
   .home-page {
     padding: 0.1rem 0 0;
-    gap: 0.55rem;
+    gap: 0.45rem;
   }
 
   .home-logo-wrap {
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.1rem;
   }
 
+  /* Shrunk a bit to make room for the much bigger tagline below —
+     OTI itself (title) is untouched. */
   .home-logo-spin {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
   }
 
-  /* Primary: wordmark stays the loudest thing on the page — sized up */
+  /* OTI wordmark — left as-is in size, just given real breathing room
+     below so it reads as its own distinct block. */
   .home-title {
     font-size: 2rem;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.3rem;
   }
 
-  /* Tertiary: still the smallest, but sized up to stay readable */
+  /* This is the actual tagline ("OpenFlow Trust Infrastructure") — made
+     big and bold so it reads as a statement, not a small caption, with
+     clear space above (from OTI) and below (from the "On-chain..." line)
+     so all three read as distinct, separated blocks. */
   .home-wordmark-sub {
-    font-size: 0.66rem;
-    margin-bottom: 0.2rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin: 0 0 0.4rem;
   }
 
-  /* Secondary: readable but clearly a step below the wordmark */
+  /* Secondary: the supporting line under the tagline */
   .home-tagline {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
+    margin-top: 0.1rem;
   }
 
   .home-form-card {
-    padding: 0.65rem 0.7rem;
+    padding: 0.55rem 0.65rem;
     border-radius: 0.85rem;
   }
 
   .home-example-wrap {
-    margin-top: 0.35rem;
+    margin-top: 0.3rem;
   }
 
   /* Tertiary */
@@ -591,7 +600,7 @@ textarea {
   }
 
   .home-wor-links {
-    gap: 0.5rem;
+    gap: 0.45rem;
     margin-top: 0;
   }
 
