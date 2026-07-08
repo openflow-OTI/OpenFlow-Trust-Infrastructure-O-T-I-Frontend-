@@ -461,9 +461,12 @@ textarea {
   opacity: 0.85;
 }
 
-/* Home footer — white */
+/* Home footer — white. No `margin-top: auto` here: `.home-page`'s
+   `justify-content: space-between` already flushes the last child (this
+   footer) to the very bottom of the page on its own — an auto margin would
+   compete with it for the same free space instead of sharing it evenly
+   across every gap. */
 .home-footer {
-  margin-top: auto;
   padding: 1rem 0 0.5rem;
   text-align: center;
   font-size: 0.7rem;
@@ -481,25 +484,6 @@ textarea {
 
 .home-footer-link:hover {
   opacity: 0.75;
-}
-
-/* Keep home-subtitle in CSS (unused but harmless) */
-.home-subtitle {
-  color: var(--text-dim);
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.7;
-}
-
-/* home-rate-note kept for safety (no longer rendered) */
-.home-rate-note {
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 0.78rem;
-  margin: 0;
-  letter-spacing: 0.01em;
-  margin-top: auto;
-  padding-bottom: 0.5rem;
 }
 
 /* ── Mobile: lock home page to viewport — everything fits, nothing scrolls ──
@@ -521,17 +505,13 @@ textarea {
     padding-bottom: 0;
   }
 
-  /* `justify-content: space-between` only reads well when content roughly
-     fills the box. Now that the height above is a real fixed value (taller
-     than the content), space-between spread the leftover space evenly
-     between every pair of items — including a big gap right after the form
-     card — instead of respecting `.home-footer`'s own `margin-top: auto`
-     bottom-pin. Switch to flex-start so items sit close together with just
-     `gap`, and let the footer's auto margin do the only "push to bottom". */
-  .home-page {
-    justify-content: flex-start;
-  }
-
+  /* Keep the base `justify-content: space-between` here (not flex-start):
+     the user wants real breathing room between every block, spread all the
+     way down to a footer that sits flush at the bottom — not everything
+     bunched at the top. `.home-footer`'s own `margin-top: auto` used to
+     fight this (it tries to claim ALL free space for itself before
+     space-between gets a turn), so that's been removed below in favor of
+     letting space-between distribute it evenly across every gap. */
 }
 
 /* ── Small phone tightening (≤480px) ──
@@ -550,7 +530,7 @@ textarea {
 
   .home-page {
     padding: 0.1rem 0 0;
-    gap: 0.85rem;
+    gap: 0.6rem;
   }
 
   .home-logo-wrap {
@@ -621,7 +601,6 @@ textarea {
 
   .home-footer {
     padding: 0.45rem 0 0.1rem;
-    margin-top: 0.3rem;
     font-size: 0.62rem;
   }
 }
