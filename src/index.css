@@ -26,6 +26,18 @@ body,
   min-height: 100%;
 }
 
+/* Task 8E: iOS Safari can still trigger double-tap-to-zoom even when the
+   viewport meta sets maximum-scale/minimum-scale. `manipulation` disables
+   that non-standard double-tap gesture while explicitly preserving pan-x/
+   pan-y scrolling AND pinch-zoom, so the admin table's horizontal scroll,
+   the chain selector dropdown, and deliberate accessibility pinch-zoom are
+   all unaffected. Desktop zoom (Ctrl+/-, Ctrl+scroll) is a browser-chrome
+   feature, not a touch gesture, so it is untouched by this property. */
+html,
+body {
+  touch-action: manipulation;
+}
+
 body {
   margin: 0;
   background: var(--bg);
