@@ -1114,8 +1114,68 @@ textarea {
   gap: 0.5rem;
 }
 
+/* Wraps the score panel + its dedicated ring layer (see below), same
+   pattern as .home-form-card-wrap / .home-form-card-ring. */
+.results-score-ring-wrap {
+  position: relative;
+  width: 100%;
+}
+
+/* Rotating ring around the score panel, same technique as
+   .home-form-card-ring: a giant SQUARE conic-gradient rotated behind
+   everything, clipped to a thin ring by overflow:hidden, with `::after`
+   painting the panel's own (chain-tinted) background back over the middle. */
+.results-score-ring {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.results-score-ring::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 220%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: center;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 58%,
+    rgba(0, 229, 160, 0.5) 64%,
+    var(--accent) 72%,
+    rgba(0, 229, 160, 0.5) 80%,
+    transparent 86%
+  );
+  will-change: transform;
+  animation: card-ring-spin 2.2s linear infinite;
+}
+
+.results-score-ring::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--chain-color, var(--surface)) 4%, var(--surface));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results-score-ring::before {
+    animation: none !important;
+  }
+}
+
 /* Task 8 — score panel */
 .results-score-panel {
+  position: relative;
+  z-index: 1;
   width: 100%;
   display: flex;
   flex-direction: column;

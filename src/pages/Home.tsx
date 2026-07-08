@@ -169,19 +169,25 @@ export function Home() {
           ) : (
             <>
               <div
-                className="results-score-panel"
+                className="results-score-ring-wrap"
                 style={{ '--chain-color': chainInfo?.color ?? 'var(--accent)' } as React.CSSProperties}
               >
-                <ScoreGauge score={scoreQuery.data.score} ringColor={chainInfo?.color} />
-                {(() => {
-                  const tier = scoreTier(scoreQuery.data.score)
-                  return (
-                    <span className="results-tier-label" style={{ color: tier.color }}>
-                      {tier.label}
-                    </span>
-                  )
-                })()}
-                {scoreQuery.data.cached && <CachedBadge />}
+                {/* Decorative-only ring layer, kept as a sibling (not an
+                    ancestor) of the panel content — same technique as
+                    .home-form-card-ring. */}
+                <div className="results-score-ring" aria-hidden="true" />
+                <div className="results-score-panel">
+                  <ScoreGauge score={scoreQuery.data.score} ringColor={chainInfo?.color} />
+                  {(() => {
+                    const tier = scoreTier(scoreQuery.data.score)
+                    return (
+                      <span className="results-tier-label" style={{ color: tier.color }}>
+                        {tier.label}
+                      </span>
+                    )
+                  })()}
+                  {scoreQuery.data.cached && <CachedBadge />}
+                </div>
               </div>
 
               <div className="results-signals-panel">
