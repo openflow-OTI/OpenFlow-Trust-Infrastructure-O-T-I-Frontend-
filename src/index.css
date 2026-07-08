@@ -1829,6 +1829,50 @@ textarea {
 }
 .admin-success { color: var(--accent); font-size: 0.82rem; margin: 0; }
 
+/* ── Config Sync Health ─────────────────────────────────────────────────── */
+.sync-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--mono);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.sync-chip--ok      { background: rgba(0, 229, 160, 0.12); color: var(--accent); }
+.sync-chip--fail    { background: rgba(239, 68, 68, 0.12);  color: var(--danger); }
+.sync-chip--unknown { background: rgba(148, 163, 184, 0.1); color: var(--text-dim); }
+
+.sync-overview {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.sync-sub-header {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.sync-sub-label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+.sync-sub-label code {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+}
+
 /* ── Hamburger button ── */
 .admin-hamburger {
   background: transparent;

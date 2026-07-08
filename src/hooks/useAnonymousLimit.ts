@@ -6,18 +6,13 @@ export function useAnonymousLimit() {
   return useQuery({
     queryKey: ['anonymous-limit'],
     queryFn: async () => {
-      // Use the public endpoint — not the admin one (which requires x-admin-secret).
-      // cache: 'no-store' ensures the browser never serves a stale response from
-      // its HTTP cache after an admin change.
-      // Append a timestamp so every request is a unique URL. This defeats any
-      // edge/CDN cache (e.g. Railway Hikari) that may cache by URL regardless
-      // of Cache-Control request headers.
-      const res = await fetch(
-        `${baseUrl}/api/config/anonymous-limit?_t=${Date.now()}`,
-        { cache: 'no-store' },
-      )
+      // Public endpoint — no admin secret required.
+      // Backend now sends Cache-Control: no-store on all responses, so no
+      // edge/CDN caching possible. cache:'no-store' on the request side for
+      // belt-and-suspenders browser cache prevention.
+      const res = await fetch(`${baseUrl}/api/config/anonymous-limit`, { cache: 'no-store' })
       if (!res.ok) throw new Error('Could not fetch anonymous limit')
-      const data = await res.json() as { daily_limit: number | null }
+      const data = await res.json() as { daily_limit: number | null; updated_at?: string }
       const limit = data.daily_limit
       // null means the DB hasn't been explicitly set yet — fall back to the
       // architectural default of 3 (anonymous plan always rate-limits to 3/day)

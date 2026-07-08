@@ -13,6 +13,7 @@ import { QueryHistory }       from './admin/QueryHistory'
 import { AdminCache }         from './admin/AdminCache'
 import { PlanConfigs }        from './admin/PlanConfigs'
 import { CompromisedWallets } from './admin/CompromisedWallets'
+import { ConfigSync }         from './admin/ConfigSync'
 
 class AdminErrorBoundary extends Component<
   { children: ReactNode; onReset: () => void },
@@ -49,7 +50,7 @@ class AdminErrorBoundary extends Component<
   }
 }
 
-type Screen = 'dashboard' | 'keys' | 'usage' | 'history' | 'cache' | 'plans' | 'flagged'
+type Screen = 'dashboard' | 'keys' | 'usage' | 'history' | 'cache' | 'plans' | 'flagged' | 'sync'
 
 const SCREENS: { id: Screen; label: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard',       icon: '▦' },
@@ -59,6 +60,7 @@ const SCREENS: { id: Screen; label: string; icon: string }[] = [
   { id: 'cache',     label: 'Cache',            icon: '⟳' },
   { id: 'plans',     label: 'Plan Configs',     icon: '◧' },
   { id: 'flagged',   label: 'Flagged Wallets',  icon: '⚑' },
+  { id: 'sync',      label: 'Config Sync',      icon: '⟐' },
 ]
 
 export function Admin() {
@@ -206,6 +208,7 @@ export function Admin() {
           {screen === 'cache'     && <AdminCache />}
           {screen === 'plans'     && <PlanConfigs />}
           {screen === 'flagged'   && <CompromisedWallets />}
+          {screen === 'sync'      && <ConfigSync />}
         </div>
       </div>
     </div>
