@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { EVM_CHAINS, NON_EVM_CHAINS, getChainInfo, type ChainInfo } from '@/lib/chains'
+import { CHAINS, getChainInfo, type ChainInfo } from '@/lib/chains'
 import { ChainIcon } from './ChainIcon'
 
 interface ChainSelectProps {
@@ -79,8 +79,7 @@ export function ChainSelect({ value, onChange, id }: ChainSelectProps) {
 
       {open && (
         <div className="chain-select-panel" role="listbox">
-          {renderGroup('EVM', EVM_CHAINS)}
-          {renderGroup('Non-EVM', NON_EVM_CHAINS)}
+          {renderGroup('SELECT COIN', CHAINS)}
         </div>
       )}
     </div>

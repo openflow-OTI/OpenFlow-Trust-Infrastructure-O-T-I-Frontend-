@@ -97,26 +97,14 @@ Backend Builder verifying `daily_limit` enforcement across all plan types (free,
 
 ## Active
 
-### 🔄 Task 8E — Disable Mobile Pinch/Double-Tap Zoom Across the App
-**Priority:** MEDIUM — polish/UX consistency, not a functional bug
-**Depends on:** Task 8D ✅ (done)
+### ✅ Task 8E — Disable Mobile Pinch/Double-Tap Zoom Across the App (compromise version)
+Completed July 8, 2026. Per Ahmad's accessibility compromise: viewport meta set to `maximum-scale=2, minimum-scale=1` (not `user-scalable=no`/`maximum-scale=1`) — curbs runaway pinch-zoom while preserving accessibility zoom. Added `touch-action: manipulation` on html/body as an iOS double-tap-zoom backstop; verified it does not affect `.admin-table-wrap` horizontal scroll or the `.chain-select-panel` dropdown. Desktop zoom (Ctrl+/-, Ctrl+scroll) unaffected — those properties are touch/viewport-only.
+*(Note: maximum-scale was further reduced from 5→2 on Ahmad's follow-up request in the same session. Verified by inspection and static screenshots only — no physical touch-gesture test was possible in this environment; recommend a quick real-device check.)*
 
-**Why:** Ahmad found that on mobile, users can pinch-zoom and double-tap-zoom every page — homepage, results/scoring page, and admin dashboard. This fights against the carefully sized mobile layout already shipped in Task 8D. Needs to be disabled on mobile only. Desktop zoom (Ctrl+/-, Ctrl+scroll, browser zoom controls) must be completely unaffected.
+### ✅ Task 8F — Reorder Chain Selector by Popularity, Remove EVM/Non-EVM Grouping
+Completed July 8, 2026, per Ahmad's direct request (exception to the "chain selector is off-limits" rule — confirmed explicitly by Ahmad in-session).
+- File: `src/lib/chains.ts` — reordered the `CHAINS` array by real-world popularity instead of EVM-first: Bitcoin, Ethereum, Solana, BNB Smart Chain, Tron, TON, Avalanche, Polygon, Arbitrum, Optimism, Base, Sui, Fantom, Linea, zkSync. Removed the now-unused `EVM_CHAINS`/`NON_EVM_CHAINS` exports (the `family` field itself is still used by `validateAddress.ts` for per-chain address format validation — not removed).
+- File: `src/components/ChainSelect.tsx` — dropdown no longer renders separate "EVM" / "Non-EVM" group headers; renders one flat list under a single "SELECT COIN" heading, in the new popularity order.
+- Popularity ranking is a reasoned estimate (market cap for L1 native coins, TVL/usage mindshare for L2s) — not pulled from a live ranking API. Flagged to Ahmad for awareness; open to reordering specific chains if he disagrees with any placement.
 
-**Files you will likely touch:**
-- index.html (the `<meta name="viewport">` tag)
-- Possibly src/index.css (a touch-action backstop, only if needed)
-
-**Do NOT touch:** `src/lib/scoring.ts`, `nixpacks.toml`, `vercel.json`, anything already fixed in Task 8C/8D.
-
-**What to build:**
-1. Update the viewport meta tag to: `width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`
-2. Since this is one SPA served from one index.html, this should cover the homepage, results page, and admin dashboard in a single change — verify that's actually true for this codebase (check there's no separate HTML entry point for admin) rather than assuming it.
-3. If double-tap-to-zoom still works on iOS Safari after that (a known iOS quirk where `user-scalable=no` isn't always fully honored), add `touch-action: manipulation` as a CSS backstop on html/body — test first that this doesn't break the chain selector dropdown or admin table scrolling.
-4. Confirm desktop zoom (Ctrl+/-, Ctrl+scroll) is completely unaffected after your changes — viewport meta and touch-action only affect mobile touch gestures, but verify it explicitly.
-
-**Definition of done:**
-- On mobile emulation (touch simulation on), pinch and double-tap zoom no longer work on the homepage, results/scoring view, and admin dashboard
-- Desktop zoom still works exactly as before
-- No regressions to chain selector or admin table scrolling
-- Report back confirming you tested all three views on mobile emulation and confirmed desktop is unaffected, before marking done
+## Nothing else currently active.
