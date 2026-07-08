@@ -292,6 +292,17 @@ textarea {
               0 0 32px rgba(0, 229, 160, 0.07);
 }
 
+/* Animated "Try an example →" border — CSS conic-gradient trick */
+@property --example-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes example-border-spin {
+  to { --example-angle: 360deg; }
+}
+
 /* "Try an example →" link */
 .home-example-wrap {
   margin-top: 1rem;
@@ -299,17 +310,33 @@ textarea {
 }
 
 .home-example-link {
+  display: inline-block;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
   text-decoration: none;
   letter-spacing: 0.02em;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    conic-gradient(
+      from var(--example-angle),
+      transparent 0%,
+      transparent 58%,
+      rgba(0, 229, 160, 0.5) 64%,
+      var(--accent) 72%,
+      rgba(0, 229, 160, 0.5) 80%,
+      transparent 86%
+    ) border-box;
+  animation: example-border-spin 2.2s linear infinite;
   transition: color 0.15s ease, text-shadow 0.15s ease;
   cursor: pointer;
 }
 
 .home-example-link:hover {
   color: var(--accent);
-  text-shadow: 0 0 10px rgba(0, 229, 160, 0.35);
+  text-shadow: 0 0 12px rgba(0, 229, 160, 0.45);
 }
 
 /* Rate limit pill badge */
@@ -448,39 +475,39 @@ textarea {
   }
 
   .home-page {
-    padding: 0.25rem 0 0;
-    gap: 0.55rem;
+    padding: 0.15rem 0 0;
+    gap: 0.45rem;
   }
 
   .home-logo-wrap {
-    margin-bottom: 0.3rem;
-  }
-
-  .home-logo-spin {
-    width: 68px;
-    height: 68px;
-  }
-
-  .home-title {
-    font-size: 2.2rem;
-    margin-bottom: 0.15rem;
-  }
-
-  .home-wordmark-sub {
-    font-size: 0.65rem;
     margin-bottom: 0.2rem;
   }
 
+  .home-logo-spin {
+    width: 54px;
+    height: 54px;
+  }
+
+  .home-title {
+    font-size: 1.75rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .home-wordmark-sub {
+    font-size: 0.55rem;
+    margin-bottom: 0.15rem;
+  }
+
   .home-tagline {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
   }
 
   .home-form-card {
-    padding: 1rem 1rem;
+    padding: 0.8rem 0.8rem;
   }
 
   .home-example-wrap {
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
   }
 
   .home-wor-links {
@@ -527,6 +554,10 @@ textarea {
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.15s ease;
+}
+
+.wallet-form-input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
 }
 
 .wallet-form-input:focus {
