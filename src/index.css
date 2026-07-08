@@ -302,7 +302,8 @@ textarea {
    which is compositor-only (no paint, no layout) and is masked down to a
    thin ring so only a moving mint highlight is visible around the pill. */
 @keyframes example-border-spin {
-  to { transform: rotate(360deg); }
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* "Try an example →" link */
@@ -313,6 +314,9 @@ textarea {
 
 .home-example-link {
   position: relative;
+  z-index: 0;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-block;
   font-size: 0.8rem;
   color: #ffffff;
@@ -325,15 +329,26 @@ textarea {
   cursor: pointer;
 }
 
-/* Thin rotating mint ring, carved out via mask so only the border strip
-   (not the whole pill) shows the gradient. `transform: rotate` is the only
-   animated property — GPU compositor handles it, zero repaint per frame. */
+/* Rotating ring, rebuilt: the pill is a wide-short rectangle, and a
+   conic-gradient painted directly into a non-square box gets stretched into
+   an ellipse — that's why the highlight looked like a flashing "fan" wedge
+   instead of a dot circling evenly around the border. Fix: paint the conic
+   gradient into a perfect SQUARE (`aspect-ratio: 1`) sized to fully cover
+   the pill's diagonal, centered behind everything and clipped to the pill's
+   rounded shape by the parent's `overflow: hidden` — so the gradient itself
+   is a true circle, and only rotating it (`transform`, GPU-cheap) is
+   animated. `::after` then paints over the middle with the pill's own
+   background, leaving just a thin ring of the circle visible as a border. */
 .home-example-link::before {
   content: '';
   position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
+  z-index: -2;
+  top: 50%;
+  left: 50%;
+  width: 220%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: center;
   background: conic-gradient(
     from 0deg,
     transparent 0%,
@@ -343,11 +358,18 @@ textarea {
     rgba(0, 229, 160, 0.5) 80%,
     transparent 86%
   );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
   will-change: transform;
   animation: example-border-spin 2.2s linear infinite;
+  pointer-events: none;
+}
+
+.home-example-link::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 1px;
+  border-radius: inherit;
+  background: var(--surface);
   pointer-events: none;
 }
 
@@ -498,6 +520,18 @@ textarea {
     overflow: hidden;
     padding-bottom: 0;
   }
+
+  /* `justify-content: space-between` only reads well when content roughly
+     fills the box. Now that the height above is a real fixed value (taller
+     than the content), space-between spread the leftover space evenly
+     between every pair of items — including a big gap right after the form
+     card — instead of respecting `.home-footer`'s own `margin-top: auto`
+     bottom-pin. Switch to flex-start so items sit close together with just
+     `gap`, and let the footer's auto margin do the only "push to bottom". */
+  .home-page {
+    justify-content: flex-start;
+  }
+
 }
 
 /* ── Small phone tightening (≤480px) ──
@@ -516,7 +550,7 @@ textarea {
 
   .home-page {
     padding: 0.1rem 0 0;
-    gap: 0.4rem;
+    gap: 0.85rem;
   }
 
   .home-logo-wrap {
@@ -560,9 +594,8 @@ textarea {
     padding: 0.25rem 0.75rem;
   }
 
-  /* Breathing room: this was the most cramped gap on the page */
   .home-rate-badge-wrap {
-    margin-top: 0.85rem;
+    margin-top: 0;
   }
 
   /* Tertiary */
@@ -573,7 +606,7 @@ textarea {
 
   .home-wor-links {
     gap: 0.45rem;
-    margin-top: 0.9rem;
+    margin-top: 0;
   }
 
   /* Tertiary */
@@ -810,6 +843,28 @@ textarea {
 .wallet-form-submit:hover {
   opacity: 1;
   box-shadow: 0 0 24px rgba(0, 229, 160, 0.40), 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Chain dropdown mobile fix — must live after the base `.chain-select-panel`
+   rule (line ~705) to win the cascade, same reasoning as the block below.
+   It opens upward by default (fits fine on desktop), but on the locked,
+   short mobile viewport that pushes its top edge above the screen and
+   clips options. Open it downward instead, capped so the options stay
+   inside the visible, locked viewport. */
+@media (max-width: 768px) {
+  .chain-select-panel {
+    top: calc(100% + 0.4rem);
+    bottom: auto;
+    /* Capped conservatively (not just 40vh) so it stays inside the locked,
+       non-scrolling mobile viewport even on the shortest real phones (e.g.
+       ~568px tall), where the trigger sits close enough to the bottom that
+       a looser vh-based cap could still get clipped by the ancestor's
+       `overflow: hidden`. The panel's own `overflow-y: auto` (base rule)
+       still lets people scroll to reach every chain within this cap. */
+    max-height: min(38vh, 230px);
+    overscroll-behavior: contain;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+  }
 }
 
 /* Wallet form mobile tightening — must live after base rules to win cascade */
