@@ -73,19 +73,28 @@ export function Home() {
           <p className="home-tagline">On-chain trust scoring for any wallet, any chain</p>
         </div>
 
-        <div className="home-form-card">
-          <WalletForm onSubmit={handleSearch} />
-          <div className="home-example-wrap">
-            <a
-              href="#"
-              className="home-example-link"
-              onClick={(e) => {
-                e.preventDefault()
-                handleSearch('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', 'ethereum')
-              }}
-            >
-              Try an example →
-            </a>
+        <div className="home-form-card-wrap">
+          {/* Decorative-only ring layer, kept as a sibling (not an ancestor)
+              of the actual card content: it needs its own overflow:hidden to
+              clip its rotating square into a true circular ring, but the
+              card's chain dropdown needs to pop out past the card's edges
+              without being clipped. Keeping them as siblings means the
+              dropdown never lives inside an overflow:hidden ancestor. */}
+          <div className="home-form-card-ring" aria-hidden="true" />
+          <div className="home-form-card">
+            <WalletForm onSubmit={handleSearch} />
+            <div className="home-example-wrap">
+              <a
+                href="#"
+                className="home-example-link"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleSearch('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', 'ethereum')
+                }}
+              >
+                Try an example →
+              </a>
+            </div>
           </div>
         </div>
 

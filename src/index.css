@@ -281,16 +281,10 @@ textarea {
   line-height: 1.5;
 }
 
-/* Form card — mint border glow, plus the same rotating ring used on
-   "Try an example →". Uses the mask technique (not the link's
-   overflow:hidden + square-background trick) because this card contains
-   the chain dropdown, which must be able to pop out past the card's own
-   edges — overflow:hidden here would clip it again. The mask still gets a
-   true circle (not the "fan" distortion) by painting the conic-gradient
-   into a large fixed-pixel square, centered, well bigger than the card's
-   own diagonal at any breakpoint. */
+/* Form card — mint border glow */
 .home-form-card {
   position: relative;
+  z-index: 1;
   background: var(--surface);
   border: 1px solid rgba(0, 229, 160, 0.14);
   border-radius: 1rem;
@@ -300,16 +294,40 @@ textarea {
               0 0 32px rgba(0, 229, 160, 0.07);
 }
 
-@keyframes card-ring-spin {
-  to { transform: rotate(360deg); }
+/* Wraps the card + its dedicated ring layer (see below). Plain
+   position:relative, no overflow set — so the chain dropdown, nested
+   inside `.home-form-card`, can still pop out past the card's edges. */
+.home-form-card-wrap {
+  position: relative;
 }
 
-.home-form-card::before {
+/* Rotating ring around the card, same technique as "Try an example →":
+   a giant SQUARE conic-gradient (never distorted into an ellipse/fan by a
+   non-square box), rotated behind everything, with `::after` painting the
+   card's own surface color back over the middle to leave just a thin ring
+   showing. This lives on a decorative SIBLING of `.home-form-card` (not an
+   ancestor) specifically so its own `overflow: hidden` — required to clip
+   the oversized square down to the ring shape — never clips the card's
+   chain dropdown, which is a descendant of the other sibling. */
+.home-form-card-ring {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.home-form-card-ring::before {
   content: '';
   position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 220%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: center;
   background: conic-gradient(
     from 0deg,
     transparent 0%,
@@ -319,19 +337,25 @@ textarea {
     rgba(0, 229, 160, 0.5) 80%,
     transparent 86%
   );
-  background-size: 900px 900px;
-  background-position: center;
-  background-repeat: no-repeat;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
   will-change: transform;
   animation: card-ring-spin 2.2s linear infinite;
-  pointer-events: none;
+}
+
+.home-form-card-ring::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: var(--surface);
+}
+
+@keyframes card-ring-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-form-card::before {
+  .home-form-card-ring::before {
     animation: none !important;
   }
 }
