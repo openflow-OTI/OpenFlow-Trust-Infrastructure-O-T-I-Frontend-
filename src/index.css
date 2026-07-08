@@ -208,6 +208,667 @@ textarea {
   padding-bottom: 0.5rem;
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   Task 11A — Marketing homepage ("/"). Namespaced under `.marketing-*`
+   so it never collides with the scoring tool's `.home-*` / `.results-*`
+   classes. Every color/radius/shadow value below is copied directly from
+   an existing token or an existing component recipe (home-form-card,
+   results-signals-panel, wallet-form-submit, results-back, navbar) —
+   nothing here is a one-off invention.
+   ════════════════════════════════════════════════════════════════════ */
+
+.marketing-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.marketing-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Navbar — same frosted-glass recipe as the app navbar ── */
+.marketing-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(5, 8, 15, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.marketing-navbar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.marketing-navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.marketing-navbar-logo {
+  transition: transform 2.5s ease;
+}
+
+@media (hover: hover) {
+  .marketing-navbar-brand:hover .marketing-navbar-logo {
+    animation: logo-rotate 2.5s linear infinite;
+  }
+}
+
+.marketing-navbar-wordmark {
+  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.marketing-navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.marketing-navbar-links--mobile {
+  display: none;
+}
+
+.marketing-navbar-link {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease;
+}
+
+.marketing-navbar-link:hover {
+  color: var(--text);
+}
+
+.marketing-navbar-burger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+}
+
+.marketing-navbar-burger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+}
+
+@media (max-width: 768px) {
+  .marketing-navbar-links--desktop {
+    display: none;
+  }
+  .marketing-navbar-burger {
+    display: flex;
+  }
+  .marketing-navbar-links--mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0 1.5rem 1.25rem;
+  }
+}
+
+/* ── Buttons — same colors/radius/shadow as wallet-form-submit / results-back ── */
+.marketing-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: opacity 0.15s ease, box-shadow 0.2s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.marketing-btn--primary {
+  background: var(--accent);
+  color: #001a0e;
+}
+
+.marketing-btn--primary:hover {
+  opacity: 1;
+  box-shadow: 0 0 24px rgba(0, 229, 160, 0.40), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.marketing-btn--outline {
+  background: transparent;
+  color: var(--accent);
+  border-color: rgba(0, 229, 160, 0.4);
+}
+
+.marketing-btn--outline:hover {
+  border-color: var(--accent);
+  background: rgba(0, 229, 160, 0.06);
+  box-shadow: 0 0 14px rgba(0, 229, 160, 0.15);
+}
+
+.marketing-btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.marketing-btn--ghost:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.marketing-btn--lg {
+  padding: 0.9rem 1.6rem;
+  font-size: 0.95rem;
+}
+
+.marketing-btn--sm {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+/* ── Hero ── */
+.marketing-hero {
+  position: relative;
+  isolation: isolate;
+  padding: 5rem 0 4rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.marketing-hero-watermark {
+  position: absolute;
+  inset: 0;
+  background: url('/logo.svg') center 30% / 460px 460px no-repeat;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.marketing-hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.marketing-hero-headline {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  max-width: 18ch;
+  background: linear-gradient(135deg, var(--text) 35%, #3effc1 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.marketing-hero-sub {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.marketing-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.marketing-hero-chains {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+}
+
+.marketing-hero-chain-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.marketing-hero-chain-more {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── Generic section scaffolding ── */
+.marketing-section {
+  padding: 4rem 0;
+}
+
+.marketing-section--alt {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.marketing-section-heading {
+  margin: 0 0 2.5rem;
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+/* ── How It Works ── */
+.marketing-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.marketing-step-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 2rem 1.5rem 1.5rem;
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+}
+
+.marketing-step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.marketing-step-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.marketing-step-body {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+@media (max-width: 900px) {
+  .marketing-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Trust Signals ── */
+.marketing-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
+}
+
+.marketing-signal-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.75rem 1.1rem;
+}
+
+.marketing-signal-icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.marketing-signal-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.marketing-signal-weight {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.marketing-signal-body {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+@media (max-width: 1024px) {
+  .marketing-signal-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .marketing-signal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Use Cases ── */
+.marketing-usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.marketing-usecase-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.marketing-usecase-tile:hover {
+  border-color: rgba(0, 229, 160, 0.3);
+  box-shadow: 0 0 24px rgba(0, 229, 160, 0.08);
+}
+
+.marketing-usecase-icon {
+  display: block;
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.marketing-usecase-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.marketing-usecase-body {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+@media (max-width: 900px) {
+  .marketing-usecase-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .marketing-usecase-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Get the API ── */
+.marketing-api-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.marketing-api-sub {
+  margin: -1.5rem 0 0.5rem;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.marketing-code-block {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  overflow-x: auto;
+}
+
+.marketing-code-block pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.marketing-code-copy-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  color: var(--text-dim);
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.marketing-code-copy-btn:hover {
+  color: var(--accent);
+  border-color: rgba(0, 229, 160, 0.35);
+}
+
+/* ── Find Us ── */
+.marketing-findus-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.marketing-findus-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1.4rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.marketing-findus-item:hover {
+  border-color: rgba(0, 229, 160, 0.35);
+  box-shadow: 0 0 16px rgba(0, 229, 160, 0.1);
+}
+
+.marketing-findus-icon {
+  font-size: 1.1rem;
+}
+
+/* ── Footer ── */
+.marketing-footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+}
+
+.marketing-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.marketing-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+
+.marketing-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.marketing-footer-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.marketing-footer-link:hover {
+  color: var(--accent);
+}
+
+.marketing-footer-social {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.marketing-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.marketing-social-icon:hover {
+  color: var(--accent);
+  border-color: rgba(0, 229, 160, 0.4);
+}
+
+/* ── Feedback modal ── */
+.marketing-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(5, 8, 15, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.marketing-modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 2rem 1.75rem 1.75rem;
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5), 0 0 32px rgba(0, 229, 160, 0.07);
+}
+
+.marketing-modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.marketing-modal-close:hover {
+  color: var(--text);
+}
+
+.marketing-modal-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.marketing-modal-body {
+  margin: 0 0 1.5rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+@media (max-width: 480px) {
+  .marketing-hero {
+    padding: 3.5rem 0 3rem;
+  }
+  .marketing-section {
+    padding: 3rem 0;
+  }
+}
+
 /* Home */
 
 .home-page {

@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "lznAf_EMySOPb-Eixluqp"
+uri = "file://screenshots/side-by-side-home-vs-score.jpg"
+type = "image"
+title = "Marketing homepage (/) vs. scoring tool (/score) — side by side"
