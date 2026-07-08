@@ -38,22 +38,17 @@ waitForPort = 5000
 name = "Docs site"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd oti-docs && npm install --legacy-peer-deps && npm run start"
-waitForPort = 3000
-
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd oti-docs && npm install --legacy-peer-deps && npm run start -- --host 0.0.0.0"
+waitForPort = 3000
 
 [[ports]]
 localPort = 3000
 externalPort = 3000
-exposeLocalhost = true
-
-[[ports]]
-localPort = 5000
-externalPort = 80
 
 [userenv]
 
