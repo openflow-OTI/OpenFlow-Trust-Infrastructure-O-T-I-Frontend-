@@ -66,7 +66,7 @@ export function Landing() {
       <section className="marketing-hero">
         <div className="marketing-hero-watermark" aria-hidden="true" />
         <div className="marketing-container marketing-hero-inner">
-          <h1 className="marketing-hero-headline">Know Who You're Transacting With</h1>
+          <h1 className="marketing-hero-headline">Trust Who You're Transacting With</h1>
           <p className="marketing-hero-sub">
             OTI scores any blockchain wallet 0–100 using five on-chain trust signals. Instant. Free. API-ready.
           </p>
