@@ -65,8 +65,14 @@ Route `/whitepaper` — full whitepaper with 13 sections, sticky TOC sidebar, mo
 
 ## Active Tasks
 
-### 🔄 Task 11 — Developer Docs Site (Docusaurus)
-Started July 8, 2026. Docusaurus 3.10.1 classic project scaffolded at `oti-docs/`. Six sections completed: Getting Started, API Reference, Score Explanation, Supported Chains, Rate Limits & Plans, Code Examples. OTI branding applied (dark #05080f, mint #00e5a0, dark mode default). Anonymous limit verified live (100/day). All chain IDs verified from live API. Awaiting Ahmad to push `oti-docs/` to git for Vercel auto-deployment.
+Nothing else currently active.
+
+---
+
+## Completed Tasks
+
+### ✅ Task 11 — Developer Docs Site (Docusaurus) (Manager verified July 9, 2026)
+Started July 8, 2026. Docusaurus 3.10.1 classic project scaffolded at `oti-docs/`. Six sections completed: Getting Started, API Reference, Score Explanation, Supported Chains, Rate Limits & Plans, Code Examples. OTI branding applied (dark #05080f, mint #00e5a0, dark mode default). Anonymous limit verified live (100/day). All chain IDs verified from live API. Deployed as its own Vercel project (oti-docs.vercel.app); main site's vercel.json rewrites `/docs`, `/docs/`, and `/docs/:path*` to it. Fixed baseUrl (`/docs/`) and docs.routeBasePath (`''`) to resolve a root-page 404 caused by the routeBasePath/baseUrl interaction. Manager confirmed live in production: otiscore.vercel.app/docs, /docs/, and /docs/api-reference all working.
 
 ---
 

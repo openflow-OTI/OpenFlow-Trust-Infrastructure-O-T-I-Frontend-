@@ -142,6 +142,6 @@ Completed July 8, 2026, per Ahmad's next-task assignment (spec in `docs/FRONTEND
 
 ---
 
-## Task 11 — Developer Docs Site (Docusaurus) 🔄
+## ✅ Task 11 — Developer Docs Site (Docusaurus) (Manager verified July 9, 2026)
 
-Started July 8, 2026. Docusaurus 3.10.1 classic project at `oti-docs/`. OTI branding applied. All 6 sections complete. Deployment: Ahmad pushes `oti-docs/` to git → Vercel auto-detects Docusaurus → zero-config build. See TASKS.md for full notes.
+Started July 8, 2026. Docusaurus 3.10.1 classic project at `oti-docs/`. OTI branding applied. All 6 sections complete. Deployed as its own Vercel project at oti-docs.vercel.app, with baseUrl `/docs/` and a routeBasePath/rewrite fix so it serves correctly under the main site. Manager confirmed live: otiscore.vercel.app/docs, /docs/, and /docs/api-reference all working. See TASKS.md for full notes.
