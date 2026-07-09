@@ -1,11 +1,7 @@
 import { useState } from 'react';
 
 // ─── API endpoint ────────────────────────────────────────────────────────────
-// Custom domain: api.otiscore.io → workspaceapi-server-production-5c0c.up.railway.app
-// To activate: Railway dashboard → your backend project → Settings → Custom Domains
-// Add domain: api.otiscore.io  (Railway will issue SSL automatically)
-// Then add CNAME in your DNS registrar:  api  →  workspaceapi-server-production-5c0c.up.railway.app
-const API_BASE = 'https://api.otiscore.io/api';
+const API_BASE = 'https://workspaceapi-server-production-5c0c.up.railway.app/api';
 
 const CHAINS = [
   { id: 'ethereum',  label: 'Ethereum',  example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin' },

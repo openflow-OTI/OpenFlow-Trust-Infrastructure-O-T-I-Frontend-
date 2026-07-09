@@ -33,7 +33,7 @@ Anonymous access gives you **100 requests per day** per IP with zero setup. This
 The current anonymous daily limit can always be checked live:
 
 ```bash
-curl https://api.otiscore.io/api/config/anonymous-limit
+curl https://workspaceapi-server-production-5c0c.up.railway.app/api/config/anonymous-limit
 ```
 
 ```json
@@ -83,7 +83,7 @@ Unlike the daily limit, burst protection is temporary. Back off for a few second
 Include your key in the `x-api-key` header on every request:
 
 ```bash
-curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum" \
+curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum" \
   -H "x-api-key: oti_your_key_here"
 ```
 

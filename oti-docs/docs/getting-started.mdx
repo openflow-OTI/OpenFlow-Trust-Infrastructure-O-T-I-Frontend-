@@ -30,11 +30,11 @@ Switch the chain, hit **▶ Score** — live response, no signup, no key needed.
 All requests go to a single base URL:
 
 ```
-https://api.otiscore.io/api
+https://workspaceapi-server-production-5c0c.up.railway.app/api
 ```
 
 :::tip
-`https://api.otiscore.io/api` is the official OTI API endpoint. Copy it directly into your code.
+`https://workspaceapi-server-production-5c0c.up.railway.app/api` is the official OTI API endpoint. Copy it directly into your code.
 :::
 
 ---
@@ -44,7 +44,7 @@ https://api.otiscore.io/api
 No setup required. Paste this into your terminal and get a real score in seconds:
 
 ```bash
-curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum"
+curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum"
 ```
 
 **Response:**
@@ -79,7 +79,7 @@ You get **100 requests per day** without any API key, per IP, resetting at midni
 When you're ready for production or need a higher daily limit, add your key to the `x-api-key` header:
 
 ```bash
-curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum" \
+curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum" \
   -H "x-api-key: oti_your_key_here"
 ```
 

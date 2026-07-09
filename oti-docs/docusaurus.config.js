@@ -8,7 +8,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://docs.otiscore.vercel.app',
-  baseUrl: '/docs/',
+  baseUrl: '/',
 
   organizationName: 'openflow-labs',
   projectName: 'oti-docs',
