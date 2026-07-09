@@ -11,11 +11,11 @@ sidebar_position: 2
 All requests go to:
 
 ```
-https://workspaceapi-server-production-5c0c.up.railway.app/api
+https://api.otiscore.io/api
 ```
 
-:::info
-This is the official, live OTI API — hosted on Railway (a cloud infrastructure provider). The URL is correct. A shorter branded domain is being configured and this doc will be updated when it goes live.
+:::tip
+`https://api.otiscore.io/api` is the official OTI API endpoint. Copy it directly into your code.
 :::
 
 All responses are `Content-Type: application/json`.
@@ -40,7 +40,7 @@ Anonymous access is always available with no setup. Add `x-api-key` when you nee
 Health check. Returns immediately with no computation.
 
 ```bash
-curl https://workspaceapi-server-production-5c0c.up.railway.app/api/healthz
+curl https://api.otiscore.io/api/healthz
 ```
 
 **Response `200 OK`**
@@ -56,7 +56,7 @@ curl https://workspaceapi-server-production-5c0c.up.railway.app/api/healthz
 Returns all chains OTI recognizes, with their internal chain identifiers.
 
 ```bash
-curl https://workspaceapi-server-production-5c0c.up.railway.app/api/chains
+curl https://api.otiscore.io/api/chains
 ```
 
 **Response `200 OK`**
@@ -106,7 +106,7 @@ Results are cached in memory. The first call fetches live on-chain data; subsequ
 **Request**
 
 ```bash
-curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum"
+curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum"
 ```
 
 **Response `200 OK` — Normal score**
@@ -182,7 +182,7 @@ Same as `GET /score/{address}` but accepts `address` and `chain` in the JSON bod
 **Request**
 
 ```bash
-curl -X POST https://workspaceapi-server-production-5c0c.up.railway.app/api/score \
+curl -X POST https://api.otiscore.io/api/score \
   -H "Content-Type: application/json" \
   -d '{"address":"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045","chain":"ethereum"}'
 ```
@@ -205,7 +205,7 @@ Returns the 50 most recent persisted score records for a wallet, ordered most-re
 **Request**
 
 ```bash
-curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045/history?chain=ethereum"
+curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045/history?chain=ethereum"
 ```
 
 **Response `200 OK`**

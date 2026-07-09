@@ -67,7 +67,7 @@ Wallets are blocked by **chain family**, not by individual chain. If a wallet is
 ## Checking Available Chains Programmatically
 
 ```bash
-curl https://workspaceapi-server-production-5c0c.up.railway.app/api/chains
+curl https://api.otiscore.io/api/chains
 ```
 
 This always returns the live list of recognized chains.

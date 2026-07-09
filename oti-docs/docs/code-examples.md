@@ -8,7 +8,7 @@ sidebar_position: 6
 
 All examples score the same Ethereum wallet (`0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`) anonymously — no API key needed. Replace the address, chain, and optionally add `x-api-key` to use your own key.
 
-**API base URL:** `https://workspaceapi-server-production-5c0c.up.railway.app/api`
+**API base URL:** `https://api.otiscore.io/api`
 
 ---
 
@@ -17,13 +17,13 @@ All examples score the same Ethereum wallet (`0xd8dA6BF26964aF9D7eEd9e03E53415D3
 ### Score a wallet (GET)
 
 ```bash
-curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum"
+curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum"
 ```
 
 ### Score a wallet (POST)
 
 ```bash
-curl -X POST "https://workspaceapi-server-production-5c0c.up.railway.app/api/score" \
+curl -X POST "https://api.otiscore.io/api/score" \
   -H "Content-Type: application/json" \
   -d '{"address":"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045","chain":"ethereum"}'
 ```
@@ -31,20 +31,20 @@ curl -X POST "https://workspaceapi-server-production-5c0c.up.railway.app/api/sco
 ### Score with an API key
 
 ```bash
-curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum" \
+curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?chain=ethereum" \
   -H "x-api-key: oti_your_key_here"
 ```
 
 ### Get score history
 
 ```bash
-curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045/history?chain=ethereum"
+curl "https://api.otiscore.io/api/score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045/history?chain=ethereum"
 ```
 
 ### List supported chains
 
 ```bash
-curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/chains"
+curl "https://api.otiscore.io/api/chains"
 ```
 
 ---
@@ -54,7 +54,7 @@ curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/chains"
 ### Score a wallet
 
 ```javascript
-const BASE_URL = 'https://workspaceapi-server-production-5c0c.up.railway.app/api';
+const BASE_URL = 'https://api.otiscore.io/api';
 
 async function scoreWallet(address, chain, apiKey = null) {
   const url = `${BASE_URL}/score/${encodeURIComponent(address)}?chain=${chain}`;
@@ -87,7 +87,7 @@ scoreWallet('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', 'ethereum')
 ### Score via POST
 
 ```javascript
-const BASE_URL = 'https://workspaceapi-server-production-5c0c.up.railway.app/api';
+const BASE_URL = 'https://api.otiscore.io/api';
 
 async function scoreWalletPost(address, chain, apiKey = null) {
   const headers = { 'Content-Type': 'application/json' };
@@ -162,7 +162,7 @@ async function scoreWithRetry(address, chain, apiKey = null, maxRetries = 3) {
 ```python
 import requests
 
-BASE_URL = "https://workspaceapi-server-production-5c0c.up.railway.app/api"
+BASE_URL = "https://api.otiscore.io/api"
 
 def score_wallet(address: str, chain: str, api_key: str = None) -> dict:
     url = f"{BASE_URL}/score/{address}"
