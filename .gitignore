@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Chat attachments and ad-hoc screenshots — never commit these, may contain
+# personal/phone-screen content from Replit chat sessions
+attached_assets
+screenshots
+
 # Env files
 .env
 .env.local

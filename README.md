@@ -22,13 +22,6 @@ OTI scores any blockchain wallet from 0–100 using five on-chain behavioral sig
 | `/docs/` | API reference, rate limits, and integration guides (proxied from the docs site) |
 | `/admin/*` | Internal dashboard for managing API keys, usage, plan limits, and compromised-wallet reports |
 
-## Screenshots
-
-<p>
-  <img src="screenshots/side-by-side-home-vs-score.jpg" alt="Landing page and wallet score page side by side" width="49%" />
-  <img src="screenshots/side-by-side-11b.jpg" alt="OTI UI detail" width="49%" />
-</p>
-
 ## Tech stack
 
 - **React 19 + TypeScript** — strict typing throughout, no `any` escape hatches on the data layer
