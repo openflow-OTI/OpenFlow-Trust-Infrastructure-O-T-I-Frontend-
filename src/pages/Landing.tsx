@@ -108,7 +108,7 @@ export function Landing() {
           <div className="marketing-hero-chains">
             {HERO_CHAIN_IDS.map((id) => (
               <div key={id} className="marketing-hero-chain-icon" title={id}>
-                <ChainIcon chainId={id} size={34} />
+                <ChainIcon chainId={id} size={52} />
               </div>
             ))}
             <span className="marketing-hero-chain-more">+{MORE_CHAINS_COUNT} more</span>
