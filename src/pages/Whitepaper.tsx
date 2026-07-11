@@ -187,7 +187,7 @@ function ContactTable() {
           </tr>
           <tr>
             <td>Email</td>
-            <td><a href="https://openflowlabs.io" style={{ color: '#00e5a0' }}>openflowlabs.io</a></td>
+            <td><span style={{ color: '#7a8fa8' }}>Coming soon</span></td>
           </tr>
           <tr>
             <td>Twitter / X</td>
@@ -195,7 +195,7 @@ function ContactTable() {
           </tr>
           <tr>
             <td>Crisp Chat</td>
-            <td>Embedded widget (bottom right of every page)</td>
+            <td><span style={{ color: '#7a8fa8' }}>Coming soon</span></td>
           </tr>
         </tbody>
       </table>

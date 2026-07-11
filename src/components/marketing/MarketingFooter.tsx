@@ -15,7 +15,7 @@ export function MarketingFooter() {
       <div className="marketing-container marketing-footer-inner">
         <div className="marketing-footer-brand">
           <Logo size={22} />
-          <span>© 2026 OpenFlow Labs</span>
+          <span>© 2026 OTI</span>
         </div>
 
         <nav className="marketing-footer-links">

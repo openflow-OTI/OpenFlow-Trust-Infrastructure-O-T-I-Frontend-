@@ -93,10 +93,10 @@ Keys follow the format `oti_<32 hex chars>`. The full key is shown **only once**
 
 ## How to Get a Key
 
-Visit [openflowlabs.io](https://openflowlabs.io) to request an API key. Free-tier keys are available for evaluation and low-volume production.
+API key requests are handled directly by the OTI team — a self-serve request flow is coming soon. Free-tier keys are available for evaluation and low-volume production.
 
 ---
 
 ## Upgrading Your Plan
 
-Contact the OpenFlow Labs team at [openflowlabs.io](https://openflowlabs.io) with your current API key and the tier you need.
+Plan upgrades are handled directly by the OTI team — reach out with your current API key and the tier you need. A self-serve upgrade flow is coming soon.

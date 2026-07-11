@@ -86,11 +86,10 @@ const config = {
             items: [
               {label: 'Score a Wallet', href: 'https://otiscore.vercel.app/score'},
               {label: 'Whitepaper', href: 'https://otiscore.vercel.app/whitepaper'},
-              {label: 'openflowlabs.io', href: 'https://openflowlabs.io'},
             ],
           },
         ],
-        copyright: 'OpenFlow Labs · openflowlabs.io',
+        copyright: 'OTI · otiscore.vercel.app',
       },
       prism: {
         theme: prismThemes.github,
