@@ -14,16 +14,17 @@ import {
   ShieldCheck,
   Radio,
   Wrench,
-  Send,
-  MessageCircle,
-  Globe,
 } from 'lucide-react'
+import type { IconType } from 'react-icons'
+import { FaTelegram, FaDiscord } from 'react-icons/fa6'
+import { SiGooglechrome, SiFirefoxbrowser } from 'react-icons/si'
 import { MarketingNavbar } from '@/components/marketing/MarketingNavbar'
 import { MarketingFooter } from '@/components/marketing/MarketingFooter'
 import { ChainIcon } from '@/components/ChainIcon'
 import { CopyButton } from '@/components/CopyButton'
 import { CHAINS } from '@/lib/chains'
 import { useComingSoon } from '@/components/ComingSoon'
+import { useAnonymousLimit } from '@/hooks/useAnonymousLimit'
 
 const HERO_CHAIN_IDS = ['ethereum', 'solana', 'bitcoin', 'ton', 'polygon', 'arbitrum', 'sui', 'tron']
 const MORE_CHAINS_COUNT = CHAINS.length - HERO_CHAIN_IDS.length
@@ -66,11 +67,11 @@ const USE_CASES: { icon: LucideIcon; label: string; body: string }[] = [
   { icon: Wrench, label: 'Developer Tooling', body: 'One API call. Any chain. No blockchain infrastructure required.' },
 ]
 
-const FIND_US: { icon: LucideIcon; label: string }[] = [
-  { icon: Send, label: 'Telegram' },
-  { icon: MessageCircle, label: 'Discord' },
-  { icon: Globe, label: 'Chrome Extension' },
-  { icon: Globe, label: 'Firefox Extension' },
+const FIND_US: { icon: IconType; label: string }[] = [
+  { icon: FaTelegram, label: 'Telegram' },
+  { icon: FaDiscord, label: 'Discord' },
+  { icon: SiGooglechrome, label: 'Chrome Extension' },
+  { icon: SiFirefoxbrowser, label: 'Firefox Extension' },
 ]
 
 const CURL_EXAMPLE = `curl https://otiscore.vercel.app/api/score \\
@@ -79,6 +80,7 @@ const CURL_EXAMPLE = `curl https://otiscore.vercel.app/api/score \\
 
 export function Landing() {
   const showComingSoon = useComingSoon()
+  const limitQuery = useAnonymousLimit()
 
   return (
     <div className="marketing-page">
@@ -106,7 +108,7 @@ export function Landing() {
           <div className="marketing-hero-chains">
             {HERO_CHAIN_IDS.map((id) => (
               <div key={id} className="marketing-hero-chain-icon" title={id}>
-                <ChainIcon chainId={id} size={22} />
+                <ChainIcon chainId={id} size={34} />
               </div>
             ))}
             <span className="marketing-hero-chain-more">+{MORE_CHAINS_COUNT} more</span>
@@ -168,7 +170,11 @@ export function Landing() {
         <div className="marketing-container marketing-api-inner">
           <h2 className="marketing-section-heading">Free API Key. No Credit Card.</h2>
           <p className="marketing-api-sub">
-            Anonymous: 100 lookups/day. Register free for higher limits.
+            {limitQuery.isSuccess
+              ? limitQuery.data === null
+                ? 'Unlimited free lookups / day. Register free for higher limits.'
+                : `${limitQuery.data} free lookups / day. Register free for higher limits.`
+              : 'Free · No login required. Register free for higher limits.'}
           </p>
           <div className="marketing-code-block">
             <pre><code>{CURL_EXAMPLE}</code></pre>

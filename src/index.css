@@ -481,28 +481,43 @@ textarea {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.85rem;
-  margin-top: 1.5rem;
+  gap: 1.1rem;
+  margin-top: 2rem;
 }
 
 .marketing-hero-chain-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: var(--surface);
   border: 1px solid var(--border);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.marketing-hero-chain-icon:hover {
+  transform: translateY(-3px) scale(1.06);
+  border-color: rgba(0, 229, 160, 0.45);
+  box-shadow: 0 0 22px rgba(0, 229, 160, 0.2);
 }
 
 .marketing-hero-chain-more {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--text-dim);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 0.4rem 0.75rem;
+  padding: 0.6rem 1.1rem;
   letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  .marketing-hero-chain-icon {
+    width: 48px;
+    height: 48px;
+  }
 }
 
 /* ── Generic section scaffolding ── */
@@ -783,10 +798,9 @@ textarea {
 }
 
 .marketing-findus-icon {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.2rem;
+  height: 1.2rem;
   color: var(--accent);
-  stroke-width: 1.75;
 }
 
 /* ── Footer ── */
