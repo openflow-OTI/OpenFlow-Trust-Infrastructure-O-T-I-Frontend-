@@ -1,10 +1,50 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Send, MessageCircle } from 'lucide-react'
+import { FaXTwitter, FaTelegram, FaDiscord } from 'react-icons/fa6'
 import { Logo } from '@/components/Logo'
+import { useComingSoon } from '@/components/ComingSoon'
 
 export function MarketingNavbar() {
   const [open, setOpen] = useState(false)
+  const showComingSoon = useComingSoon()
+
+  const socials = (
+    <div className="marketing-navbar-social">
+      <a
+        href="#"
+        aria-label="Twitter / X"
+        className="marketing-social-icon"
+        onClick={(e) => {
+          e.preventDefault()
+          showComingSoon('Twitter / X')
+        }}
+      >
+        <FaXTwitter aria-hidden="true" />
+      </a>
+      <a
+        href="#"
+        aria-label="Telegram"
+        className="marketing-social-icon"
+        onClick={(e) => {
+          e.preventDefault()
+          showComingSoon('Telegram')
+        }}
+      >
+        <FaTelegram aria-hidden="true" />
+      </a>
+      <a
+        href="#"
+        aria-label="Discord"
+        className="marketing-social-icon"
+        onClick={(e) => {
+          e.preventDefault()
+          showComingSoon('Discord')
+        }}
+      >
+        <FaDiscord aria-hidden="true" />
+      </a>
+    </div>
+  )
 
   return (
     <header className="marketing-navbar">
@@ -20,12 +60,7 @@ export function MarketingNavbar() {
           </Link>
           <a href="/docs/" className="marketing-navbar-link">API Docs</a>
           <Link to="/whitepaper" className="marketing-navbar-link">Whitepaper</Link>
-          <div className="marketing-navbar-social">
-            <a href="#" aria-label="Twitter / X" className="marketing-social-icon marketing-social-icon--glyph">𝕏</a>
-            <a href="#" aria-label="LinkedIn" className="marketing-social-icon marketing-social-icon--glyph">in</a>
-            <a href="#" aria-label="Telegram" className="marketing-social-icon"><Send aria-hidden="true" /></a>
-            <a href="#" aria-label="Discord" className="marketing-social-icon"><MessageCircle aria-hidden="true" /></a>
-          </div>
+          {socials}
         </nav>
 
         <button
@@ -55,12 +90,7 @@ export function MarketingNavbar() {
           <Link to="/whitepaper" className="marketing-navbar-link" onClick={() => setOpen(false)}>
             Whitepaper
           </Link>
-          <div className="marketing-navbar-social">
-            <a href="#" aria-label="Twitter / X" className="marketing-social-icon marketing-social-icon--glyph">𝕏</a>
-            <a href="#" aria-label="LinkedIn" className="marketing-social-icon marketing-social-icon--glyph">in</a>
-            <a href="#" aria-label="Telegram" className="marketing-social-icon"><Send aria-hidden="true" /></a>
-            <a href="#" aria-label="Discord" className="marketing-social-icon"><MessageCircle aria-hidden="true" /></a>
-          </div>
+          {socials}
         </nav>
       )}
     </header>

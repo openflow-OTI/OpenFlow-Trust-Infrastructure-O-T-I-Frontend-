@@ -55,7 +55,7 @@ This value is configurable by OpenFlow Labs and the above endpoint always reflec
 {
   "error": "Daily rate limit exceeded",
   "limit": 100,
-  "reset": "2026-07-10T00:00:00.000Z"
+  "reset": "2025-07-10T00:00:00.000Z"
 }
 ```
 

@@ -136,7 +136,7 @@ curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8d
   "chain": "ethereum",
   "compromised": true,
   "reason": "Known phishing wallet — flagged by OpenFlow Security",
-  "reported_at": "2026-06-01T12:00:00.000Z",
+  "reported_at": "2025-06-01T12:00:00.000Z",
   "score": null
 }
 ```
@@ -227,7 +227,7 @@ curl "https://workspaceapi-server-production-5c0c.up.railway.app/api/score/0xd8d
       },
       "chain": "ethereum",
       "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
-      "timestamp": "2026-07-08T14:22:10.000Z"
+      "timestamp": "2025-07-08T14:22:10.000Z"
     }
   ]
 }
@@ -278,6 +278,6 @@ History `signals` contain **raw scores only** (not weighted), as recorded at the
 {
   "error": "Daily rate limit exceeded",
   "limit": 100,
-  "reset": "2026-07-10T00:00:00.000Z"
+  "reset": "2025-07-10T00:00:00.000Z"
 }
 ```

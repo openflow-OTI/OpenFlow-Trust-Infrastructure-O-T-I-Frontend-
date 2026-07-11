@@ -23,6 +23,7 @@ import { MarketingFooter } from '@/components/marketing/MarketingFooter'
 import { ChainIcon } from '@/components/ChainIcon'
 import { CopyButton } from '@/components/CopyButton'
 import { CHAINS } from '@/lib/chains'
+import { useComingSoon } from '@/components/ComingSoon'
 
 const HERO_CHAIN_IDS = ['ethereum', 'solana', 'bitcoin', 'ton', 'polygon', 'arbitrum', 'sui', 'tron']
 const MORE_CHAINS_COUNT = CHAINS.length - HERO_CHAIN_IDS.length
@@ -77,6 +78,8 @@ const CURL_EXAMPLE = `curl https://otiscore.vercel.app/api/score \\
   -d '{"wallet":"0xde0B...7BAe","chain":"ethereum"}'`
 
 export function Landing() {
+  const showComingSoon = useComingSoon()
+
   return (
     <div className="marketing-page">
       <MarketingNavbar />
@@ -183,7 +186,15 @@ export function Landing() {
           <h2 className="marketing-section-heading">Find Us</h2>
           <div className="marketing-findus-row">
             {FIND_US.map((f) => (
-              <a href="#" key={f.label} className="marketing-findus-item">
+              <a
+                href="#"
+                key={f.label}
+                className="marketing-findus-item"
+                onClick={(e) => {
+                  e.preventDefault()
+                  showComingSoon(f.label)
+                }}
+              >
                 <f.icon className="marketing-findus-icon" aria-hidden="true" />
                 <span>{f.label}</span>
               </a>

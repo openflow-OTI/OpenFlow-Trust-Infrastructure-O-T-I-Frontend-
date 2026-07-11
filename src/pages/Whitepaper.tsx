@@ -167,7 +167,7 @@ function ContactTable() {
         <tbody>
           <tr>
             <td>Score a Wallet</td>
-            <td><code>https://otiscore.vercel.app/score</code></td>
+            <td><Link to="/score" style={{ color: '#00e5a0' }}>otiscore.vercel.app/score</Link></td>
           </tr>
           <tr>
             <td>API Documentation</td>
@@ -261,7 +261,7 @@ export function Whitepaper() {
         <div className="marketing-container whitepaper-header-inner">
           <h1 className="whitepaper-title">OpenFlow Trust Infrastructure — Whitepaper</h1>
           <p className="whitepaper-subtitle">
-            Version 1.0 · July 2026 · OpenFlow Labs
+            Version 1.0 · OpenFlow Labs
             <span className="whitepaper-read-time" aria-label="Estimated read time">· ~16 min read</span>
           </p>
           <div className="whitepaper-header-ctas">

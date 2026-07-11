@@ -15,6 +15,7 @@ import { ShareButton } from '@/components/ShareButton'
 import { ChainIcon } from '@/components/ChainIcon'
 import { CopyButton } from '@/components/CopyButton'
 import { generateScoreCard } from '@/lib/generateScoreCard'
+import { useComingSoon } from '@/components/ComingSoon'
 
 function truncateAddress(addr: string): string {
   if (addr.length <= 13) return addr
@@ -30,6 +31,7 @@ function scoreTier(score: number): { label: string; color: string } {
 }
 
 export function Home() {
+  const showComingSoon = useComingSoon()
   const [searchParams, setSearchParams] = useSearchParams()
   const wallet = searchParams.get('wallet') ?? ''
   const chain = searchParams.get('chain') ?? ''
@@ -109,8 +111,24 @@ export function Home() {
         </div>
 
         <div className="home-wor-links">
-          <a href="#" className="home-wor-link">🔒 Own this wallet? Register it</a>
-          <a href="#" className="home-report-badge">
+          <a
+            href="#"
+            className="home-wor-link"
+            onClick={(e) => {
+              e.preventDefault()
+              showComingSoon('Wallet registration')
+            }}
+          >
+            🔒 Own this wallet? Register it
+          </a>
+          <a
+            href="#"
+            className="home-report-badge"
+            onClick={(e) => {
+              e.preventDefault()
+              showComingSoon('Wallet reporting')
+            }}
+          >
             <span className="home-report-badge-icon">⚑</span>
             <span>Report a compromised wallet</span>
           </a>
@@ -208,7 +226,16 @@ export function Home() {
                     />
                   ))}
                 </div>
-                <a href="#" className="results-report-link">⚑ Report this wallet</a>
+                <a
+                  href="#"
+                  className="results-report-link"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    showComingSoon('Wallet reporting')
+                  }}
+                >
+                  ⚑ Report this wallet
+                </a>
               </div>
 
               <div className="results-share-wrap">
@@ -238,7 +265,7 @@ export function Home() {
       )}
 
       <footer className="results-footer">
-        © 2026{' '}
+        ©{' '}
         <a href="https://otiscore.vercel.app" className="results-footer-link" target="_blank" rel="noopener noreferrer">
           OTI-Score
         </a>

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import { queryClient } from '@/lib/query-client'
+import { ComingSoonProvider } from '@/components/ComingSoon'
 import './index.css'
 import App from './App.tsx'
 
@@ -10,7 +11,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App />
+        <ComingSoonProvider>
+          <App />
+        </ComingSoonProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,
