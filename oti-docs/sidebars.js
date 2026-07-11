@@ -6,32 +6,32 @@ const sidebars = {
     {
       type: 'doc',
       id: 'getting-started',
-      label: '🚀 Getting Started',
+      label: 'Getting Started',
     },
     {
       type: 'doc',
       id: 'api-reference',
-      label: '📖 API Reference',
+      label: 'API Reference',
     },
     {
       type: 'doc',
       id: 'score-explanation',
-      label: '📊 Score Explanation',
+      label: 'Score Explanation',
     },
     {
       type: 'doc',
       id: 'supported-chains',
-      label: '⛓️ Supported Chains',
+      label: 'Supported Chains',
     },
     {
       type: 'doc',
       id: 'rate-limits',
-      label: '⚡ Rate Limits & Plans',
+      label: 'Rate Limits & Plans',
     },
     {
       type: 'doc',
       id: 'code-examples',
-      label: '💻 Code Examples',
+      label: 'Code Examples',
     },
   ],
 };

@@ -100,8 +100,8 @@ Results are cached in memory. The first call fetches live on-chain data; subsequ
 
 | Name | In | Type | Required | Description |
 |------|----|------|----------|-------------|
-| `address` | path | string | ✅ | Wallet address. EVM addresses are lowercased internally. |
-| `chain` | query | string | ✅ | Chain identifier — see [Supported Chains](/supported-chains). |
+| `address` | path | string | Required | Wallet address. EVM addresses are lowercased internally. |
+| `chain` | query | string | Required | Chain identifier — see [Supported Chains](/supported-chains). |
 
 **Request**
 
@@ -199,8 +199,8 @@ Returns the 50 most recent persisted score records for a wallet, ordered most-re
 
 | Name | In | Type | Required | Description |
 |------|----|------|----------|-------------|
-| `address` | path | string | ✅ | Wallet address |
-| `chain` | query | string | ❌ | Filter to a specific chain |
+| `address` | path | string | Required | Wallet address |
+| `chain` | query | string | Optional | Filter to a specific chain |
 
 **Request**
 

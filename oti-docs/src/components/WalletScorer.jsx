@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Play, ChevronUp, ChevronDown, AlertTriangle } from 'lucide-react';
 
 // ─── API endpoint ────────────────────────────────────────────────────────────
 const API_BASE = 'https://workspaceapi-server-production-5c0c.up.railway.app/api';
@@ -277,7 +278,13 @@ export default function WalletScorer() {
               style={loading ? { ...s.btn, ...s.btnLoading } : s.btn}
               disabled={loading}
             >
-              {loading ? 'Scoring…' : '▶ Score'}
+              {loading ? (
+                'Scoring…'
+              ) : (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <Play size={13} aria-hidden="true" /> Score
+                </span>
+              )}
             </button>
           </div>
           <div style={s.hint}>
@@ -286,11 +293,18 @@ export default function WalletScorer() {
         </div>
       </form>
 
-      {error && <div style={s.errorBox}>⚠ {error}</div>}
+      {error && (
+        <div style={{ ...s.errorBox, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+          <AlertTriangle size={14} style={{ flexShrink: 0, marginTop: 2 }} aria-hidden="true" />
+          <span>{error}</span>
+        </div>
+      )}
 
       {result && result.compromised && (
         <div style={s.compromisedBox}>
-          <strong>⚠ Compromised wallet</strong>
+          <strong style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <AlertTriangle size={14} aria-hidden="true" /> Compromised wallet
+          </strong>
           <div style={{ marginTop: 4, fontSize: 12 }}>{result.reason}</div>
           <div style={{ marginTop: 4, fontSize: 11, color: '#7a8fa8' }}>
             Reported: {new Date(result.reported_at).toUTCString()}
@@ -344,9 +358,10 @@ export default function WalletScorer() {
           <div style={{ marginTop: 12 }}>
             <button
               onClick={() => setShowRaw((v) => !v)}
-              style={{ background: 'none', border: 'none', color: '#7a8fa8', cursor: 'pointer', fontSize: 11, padding: 0, fontFamily: "'JetBrains Mono', monospace" }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', color: '#7a8fa8', cursor: 'pointer', fontSize: 11, padding: 0, fontFamily: "'JetBrains Mono', monospace" }}
             >
-              {showRaw ? '▲ Hide raw JSON' : '▼ Show raw JSON'}
+              {showRaw ? <ChevronUp size={12} aria-hidden="true" /> : <ChevronDown size={12} aria-hidden="true" />}
+              {showRaw ? 'Hide raw JSON' : 'Show raw JSON'}
             </button>
             {showRaw && (
               <pre style={s.jsonPre}>{JSON.stringify(result, null, 2)}</pre>

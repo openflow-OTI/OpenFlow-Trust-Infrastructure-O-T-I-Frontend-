@@ -16,21 +16,21 @@ Use the chain's **identifier string** (e.g. `"ethereum"`, `"solana"`) as the val
 
 | Chain | Identifier | Chain ID | Family | Status |
 |-------|-----------|----------|--------|--------|
-| Bitcoin | `bitcoin` | _(non-EVM)_ | bitcoin | ✅ Available |
-| Ethereum | `ethereum` | 1 | EVM | ✅ Available |
-| Solana | `solana` | _(non-EVM)_ | solana | ✅ Available |
-| BNB Smart Chain | `bsc` | 56 | EVM | ⚠️ Temporarily unavailable |
-| Tron | `tron` | _(non-EVM)_ | tron | ✅ Available |
-| TON | `ton` | _(non-EVM)_ | ton | ✅ Available |
-| Avalanche | `avalanche` | 43114 | EVM | ✅ Available |
-| Polygon | `polygon` | 137 | EVM | ✅ Available |
-| Arbitrum | `arbitrum` | 42161 | EVM | ✅ Available |
-| Optimism | `optimism` | 10 | EVM | ⚠️ Temporarily unavailable |
-| Base | `base` | 8453 | EVM | ⚠️ Temporarily unavailable |
-| Sui | `sui` | _(non-EVM)_ | sui | ✅ Available |
-| Fantom | `fantom` | 146 | EVM | ✅ Available |
-| Linea | `linea` | 59144 | EVM | ✅ Available |
-| zkSync | `zksync` | 324 | EVM | ✅ Available |
+| Bitcoin | `bitcoin` | _(non-EVM)_ | bitcoin | Available |
+| Ethereum | `ethereum` | 1 | EVM | Available |
+| Solana | `solana` | _(non-EVM)_ | solana | Available |
+| BNB Smart Chain | `bsc` | 56 | EVM | Temporarily unavailable |
+| Tron | `tron` | _(non-EVM)_ | tron | Available |
+| TON | `ton` | _(non-EVM)_ | ton | Available |
+| Avalanche | `avalanche` | 43114 | EVM | Available |
+| Polygon | `polygon` | 137 | EVM | Available |
+| Arbitrum | `arbitrum` | 42161 | EVM | Available |
+| Optimism | `optimism` | 10 | EVM | Temporarily unavailable |
+| Base | `base` | 8453 | EVM | Temporarily unavailable |
+| Sui | `sui` | _(non-EVM)_ | sui | Available |
+| Fantom | `fantom` | 146 | EVM | Available |
+| Linea | `linea` | 59144 | EVM | Available |
+| zkSync | `zksync` | 324 | EVM | Available |
 
 ---
 
