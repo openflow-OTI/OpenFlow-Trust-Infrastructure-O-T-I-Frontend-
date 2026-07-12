@@ -13,10 +13,10 @@ const CHAINS = [
   { id: 'polygon',   label: 'Polygon',   example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin (EVM)' },
   { id: 'arbitrum',  label: 'Arbitrum',  example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin (EVM)' },
   { id: 'avalanche', label: 'Avalanche', example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin (EVM)' },
-  { id: 'fantom',    label: 'Fantom',    example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin (EVM)' },
+  { id: 'sonic',     label: 'Sonic',     example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin (EVM)' },
   { id: 'linea',     label: 'Linea',     example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin (EVM)' },
   { id: 'zksync',    label: 'zkSync',    example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hint: 'Vitalik Buterin (EVM)' },
-  { id: 'sui',       label: 'Sui',       example: '0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b', hint: 'Sui system address' },
+  { id: 'sui',       label: 'Sui',       example: '0xac5bceec1b789ff840d7d4e6ce4ce61c90d190a7f8c4f4ddf0bff6ee2413c33c', hint: 'Highly Trusted (score 91)' },
 ];
 
 const TIERS = [

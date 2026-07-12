@@ -72,7 +72,7 @@ curl https://workspaceapi-server-production-5c0c.up.railway.app/api/chains
     { "name": "optimism",  "chainId": 10 },
     { "name": "base",      "chainId": 8453 },
     { "name": "avalanche", "chainId": 43114 },
-    { "name": "fantom",    "chainId": 146 },
+    { "name": "sonic",     "chainId": 146 },
     { "name": "linea",     "chainId": 59144 },
     { "name": "zksync",    "chainId": 324 },
     { "name": "ton",       "chainId": "ton" },

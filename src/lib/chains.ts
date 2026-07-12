@@ -24,7 +24,7 @@ export const CHAINS: ChainInfo[] = [
   { id: 'optimism',  label: 'Optimism',         family: 'evm',     color: '#FF0420' },
   { id: 'base',      label: 'Base',             family: 'evm',     color: '#0052FF' },
   { id: 'sui',       label: 'Sui',              family: 'sui',     color: '#4DA2FF' },
-  { id: 'fantom',    label: 'Fantom',           family: 'evm',     color: '#1969FF' },
+  { id: 'sonic',     label: 'Sonic',            family: 'evm',     color: '#1969FF' },
   { id: 'linea',     label: 'Linea',            family: 'evm',     color: '#61DFFF' },
   { id: 'zksync',    label: 'zkSync',           family: 'evm',     color: '#4E529A' },
 ]

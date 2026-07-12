@@ -28,7 +28,7 @@ Use the chain's **identifier string** (e.g. `"ethereum"`, `"solana"`) as the val
 | Optimism | `optimism` | 10 | EVM | Temporarily unavailable |
 | Base | `base` | 8453 | EVM | Temporarily unavailable |
 | Sui | `sui` | _(non-EVM)_ | sui | Available |
-| Fantom | `fantom` | 146 | EVM | Available |
+| Sonic | `sonic` | 146 | EVM | Available |
 | Linea | `linea` | 59144 | EVM | Available |
 | zkSync | `zksync` | 324 | EVM | Available |
 

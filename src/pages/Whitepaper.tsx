@@ -424,7 +424,7 @@ export function Whitepaper() {
             <h2><span className="whitepaper-section-number">06</span> Supported Infrastructure</h2>
             <p>OTI currently supports 15 blockchain networks:</p>
             <p><strong>EVM chains (via Etherscan V2 API):</strong><br />
-              Ethereum, Polygon, Arbitrum, Avalanche, Fantom, Linea, Scroll, zkSync, Sepolia, Holesky</p>
+              Ethereum, Polygon, Arbitrum, Avalanche, Sonic, Linea, Scroll, zkSync, Sepolia, Holesky</p>
             <p><strong>Non-EVM chains:</strong><br />
               Solana, TON, Bitcoin, Sui, Tron</p>
             <p>

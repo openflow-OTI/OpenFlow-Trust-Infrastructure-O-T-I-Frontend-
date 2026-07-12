@@ -5,7 +5,7 @@ import arbitrumSvg from '../assets/chain-icons/arbitrum.svg?raw'
 import optimismSvg from '../assets/chain-icons/optimism.svg?raw'
 import baseSvg from '../assets/chain-icons/base.svg?raw'
 import avalancheSvg from '../assets/chain-icons/avalanche.svg?raw'
-import fantomSvg from '../assets/chain-icons/fantom.svg?raw'
+import sonicSvg from '../assets/chain-icons/sonic.svg?raw'
 import lineaSvg from '../assets/chain-icons/linea.svg?raw'
 import zksyncSvg from '../assets/chain-icons/zksync.svg?raw'
 import tonSvg from '../assets/chain-icons/ton.svg?raw'
@@ -31,7 +31,7 @@ const CHAIN_ICON_SVGS: Record<string, string> = {
   optimism: optimismSvg,
   base: baseSvg,
   avalanche: avalancheSvg,
-  fantom: fantomSvg,
+  sonic: sonicSvg,
   linea: lineaSvg,
   zksync: zksyncSvg,
   ton: tonSvg,

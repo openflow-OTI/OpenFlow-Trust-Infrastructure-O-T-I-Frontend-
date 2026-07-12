@@ -2,7 +2,7 @@ import { getChainInfo } from './chains'
 
 const PATTERNS: Record<string, RegExp> = {
   evm: /^0x[0-9a-fA-F]{40}$/,
-  ton: /^(EQ|UQ)[A-Za-z0-9_-]{46}$/,
+  ton: /^(EQ|UQ)[A-Za-z0-9+/=_-]{46}$/,
   solana: /^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
   sui: /^0x[0-9a-fA-F]{64}$/,
   bitcoin: /^(1[a-km-zA-HJ-NP-Z1-9]{25,34}|3[a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-z02-9]{25,90})$/,

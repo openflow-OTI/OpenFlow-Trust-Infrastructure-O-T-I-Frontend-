@@ -338,7 +338,7 @@ export interface components {
          * @default ethereum
          * @enum {string}
          */
-        Chain: "ethereum" | "bsc" | "polygon" | "arbitrum" | "optimism" | "base" | "avalanche" | "fantom" | "linea" | "zksync" | "ton" | "solana" | "sui" | "bitcoin" | "tron";
+        Chain: "ethereum" | "bsc" | "polygon" | "arbitrum" | "optimism" | "base" | "avalanche" | "sonic" | "linea" | "zksync" | "ton" | "solana" | "sui" | "bitcoin" | "tron";
         RawSignalBreakdown: {
             /** @description Score component derived from how long the wallet has been active */
             walletAge: number;
