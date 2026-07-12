@@ -2,6 +2,45 @@ import type { ScoreMetadata } from './types'
 import type { components } from '@/api/schema.gen'
 import { getChainInfo } from './chains'
 
+// ── Chain icon SVGs (raw strings → data URLs for canvas) ──────
+import bitcoinSvg   from '../assets/chain-icons/bitcoin.svg?raw'
+import ethereumSvg  from '../assets/chain-icons/ethereum.svg?raw'
+import solanaSvg    from '../assets/chain-icons/solana.svg?raw'
+import bscSvg       from '../assets/chain-icons/bsc.svg?raw'
+import tronSvg      from '../assets/chain-icons/tron.svg?raw'
+import tonSvg       from '../assets/chain-icons/ton.svg?raw'
+import avalancheSvg from '../assets/chain-icons/avalanche.svg?raw'
+import polygonSvg   from '../assets/chain-icons/polygon.svg?raw'
+import arbitrumSvg  from '../assets/chain-icons/arbitrum.svg?raw'
+import optimismSvg  from '../assets/chain-icons/optimism.svg?raw'
+import baseSvg      from '../assets/chain-icons/base.svg?raw'
+import suiSvg       from '../assets/chain-icons/sui.svg?raw'
+import sonicSvg     from '../assets/chain-icons/sonic.svg?raw'
+import lineaSvg     from '../assets/chain-icons/linea.svg?raw'
+import zksyncSvg    from '../assets/chain-icons/zksync.svg?raw'
+
+const CHAIN_SVG_MAP: Record<string, string> = {
+  bitcoin:   bitcoinSvg,
+  ethereum:  ethereumSvg,
+  solana:    solanaSvg,
+  bsc:       bscSvg,
+  tron:      tronSvg,
+  ton:       tonSvg,
+  avalanche: avalancheSvg,
+  polygon:   polygonSvg,
+  arbitrum:  arbitrumSvg,
+  optimism:  optimismSvg,
+  base:      baseSvg,
+  sui:       suiSvg,
+  sonic:     sonicSvg,
+  linea:     lineaSvg,
+  zksync:    zksyncSvg,
+}
+
+function svgToDataUrl(svg: string): string {
+  return 'data:image/svg+xml,' + encodeURIComponent(svg)
+}
+
 type SignalBreakdown = components['schemas']['SignalBreakdown']
 
 const SIGNAL_LABELS: Record<string, string> = {
@@ -123,6 +162,13 @@ export async function generateScoreCard(params: {
   await document.fonts.ready
   const logoImg = await loadImage('/logo.svg')
 
+  // Load chain icon (fail silently — layout falls back gracefully)
+  let chainIconImg: HTMLImageElement | null = null
+  const chainSvgRaw = CHAIN_SVG_MAP[chain]
+  if (chainSvgRaw) {
+    try { chainIconImg = await loadImage(svgToDataUrl(chainSvgRaw)) } catch { /* ignore */ }
+  }
+
   // ── Canvas setup ─────────────────────────────────────────────
   const W = 640
   const H = 860
@@ -167,11 +213,16 @@ export async function generateScoreCard(params: {
   ctx.lineTo(W - PAD, 86)
   ctx.stroke()
 
-  // ── Chain + wallet ───────────────────────────────────────────
+  // ── Chain icon + wallet ──────────────────────────────────────
+  const ICON_SIZE = 32
+  if (chainIconImg) {
+    ctx.drawImage(chainIconImg, W / 2 - ICON_SIZE / 2, 92, ICON_SIZE, ICON_SIZE)
+  }
+
   ctx.textAlign = 'center'
   ctx.fillStyle = '#7a8fa8'
   ctx.font = '10px "JetBrains Mono", monospace'
-  ctx.fillText(chain.toUpperCase(), W / 2, 106)
+  ctx.fillText(chain.toUpperCase(), W / 2, chainIconImg ? 140 : 106)
 
   const truncated =
     wallet.length > 14
@@ -179,10 +230,10 @@ export async function generateScoreCard(params: {
       : wallet
   ctx.fillStyle = '#e8f4ff'
   ctx.font = '13px "JetBrains Mono", monospace'
-  ctx.fillText(truncated, W / 2, 128)
+  ctx.fillText(truncated, W / 2, chainIconImg ? 160 : 128)
 
   // ── Score panel ──────────────────────────────────────────────
-  const scorePanelY = 148
+  const scorePanelY = chainIconImg ? 178 : 148
   const scorePanelH = 240
   // tinted border using chain color (mix 22 % chain + 78 % base border)
   // We approximate this by drawing a slightly transparent chainColor stroke
