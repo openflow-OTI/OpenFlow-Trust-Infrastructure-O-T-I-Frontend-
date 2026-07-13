@@ -125,6 +125,18 @@
 
 **Status:** Scoped, not yet sent to a Builder — confirm priority with Ahmad before sending (this is broad enough that it may be worth splitting into three smaller passes — homepage, docs, whitepaper — rather than one large one). Not yet assigned an order relative to BF10 on the backend side; they're independent and can run in parallel once both are prioritized.
 
+### FF18 — Fantom → Sonic Rename Across Frontend, Docs, and Whitepaper ✅
+**Fixed:** July 12, 2026. Renamed throughout chains.ts, ChainIcon.tsx, swapped fantom.svg → sonic.svg, schema.gen.ts, Whitepaper.tsx, and docs site (api-reference.md, supported-chains.md).
+
+### FF19 — Sui and TON "Try It Live" Example Addresses Were Invalid ✅
+**Fixed:** July 12, 2026. Sui example used an EVM address; TON example was a stale 47-char address. Replaced with verified live wallets: Sui 0xac5bceec1b789ff840d7d4e6ce4ce61c90d190a7f8c4f4ddf0bff6ee2413c33c TON EQAOobN5eCwKmqhNV-l_TLePKHharXyh2-tFaYrNP14Ew5aK
+
+### FF20 — TON Address Validator Rejected Standard Base64 Variant ✅
+**Fixed:** July 12, 2026. validateAddress.ts only accepted URL-safe base64 for TON EQ/UQ addresses — rejected standard +/ variant. Regex widened to accept both. Verified live.
+
+### FF21 — Docs Site Vercel Build Config Broken for Subproject ✅
+**Fixed:** July 12, 2026. oti-docs/vercel.json build configuration fixed so the docs subproject builds and deploys correctly on Vercel. Verified live.
+
 ---
 
 ## Adding a New Fix
