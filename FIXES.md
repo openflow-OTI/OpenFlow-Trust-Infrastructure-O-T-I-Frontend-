@@ -117,7 +117,7 @@
 ### FF16 — Whitepaper Rendering Issues ✅
 **Fixed:** July 8, 2026. Three issues found during Manager's live verification of the whitepaper page: (1) body/paragraph text was rendering in the dimmed grey token instead of white — fixed, section numbers stay mint; (2) mobile horizontal scroll/shift — fixed, now fits one column at 375px; (3) Ahmad requested the Roadmap section be removed from the whitepaper entirely — removed, all following sections/TOC renumbered sequentially.
 
-### FF17 — "AI-Native Tell" Cleanup: Copy, Tone, and Emoji Across Homepage, Docs, and Whitepaper 🔴 OPEN — HIGH PRIORITY
+### FF17 — "AI-Native Tell" Cleanup: Copy, Tone, and Emoji Across Homepage, Docs, and Whitepaper ✅
 **Raised by Ahmad:** July 9, 2026. The largest open frontend fix — a full read-through of all three public-facing surfaces (marketing homepage, developer docs site, whitepaper) for anything that reads as AI-generated rather than a deliberately designed product site:
 1. **Copy/tone** — flag and rewrite any AI-sounding boilerplate phrasing.
 2. **Emoji usage** — audit and replace/remove emoji everywhere it appears (not just the Trust Signals/Use Cases sections) with a proper icon set (Lucide/Heroicons) in mint where an icon is still needed.
