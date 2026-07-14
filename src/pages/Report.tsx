@@ -168,7 +168,7 @@ export function Report() {
         <div className={`wor-card ${result.kind === 'success' ? 'wor-card--success' : 'wor-card--danger'}`}>
           {result.kind === 'success' ? (
             <>
-              <div className="wor-result-icon wor-result-icon--success">⚑</div>
+              <div className="wor-result-icon wor-result-icon--success" />
               <h2 className="wor-card-title">Wallet Flagged as Compromised</h2>
               <p className="wor-card-desc">
                 Anyone checking this wallet on OTI will now see a compromised warning.
@@ -180,7 +180,7 @@ export function Report() {
             </>
           ) : (
             <>
-              <div className="wor-result-icon wor-result-icon--danger">✕</div>
+              <div className="wor-result-icon wor-result-icon--danger" />
               <h2 className="wor-card-title">Report Failed</h2>
               <p className="wor-card-desc">{result.message}</p>
               {result.code === 404 && (
@@ -208,7 +208,7 @@ export function Report() {
       {step === 1 && (
         <div className="wor-card">
           <div className="wor-card-head">
-            <div className="wor-report-badge">⚑ Self-Reporting</div>
+            <div className="wor-report-badge">Self-Reporting</div>
             <h2 className="wor-card-title">Report a Compromised Wallet</h2>
             <p className="wor-card-desc">
               If your wallet has been stolen or hacked, flag it here. OTI will immediately
@@ -262,7 +262,7 @@ export function Report() {
 
           <div className="wor-challenge-wrap">
             <div className="wor-challenge-header">
-              <span className="wor-challenge-icon">🔐</span>
+              <span className="wor-challenge-icon" aria-hidden="true" />
               <span className="wor-challenge-label">Challenge Message — Read Before Signing</span>
             </div>
             <div className="wor-message-box">{challengeMessage}</div>
@@ -278,17 +278,16 @@ export function Report() {
               onClick={handleSign}
               disabled={loading || Boolean(signature)}
             >
-              {loading && !signature ? 'Waiting for MetaMask…' : signature ? '✓ Message Signed' : '🦊 Sign with MetaMask'}
+              {loading && !signature ? 'Waiting for MetaMask…' : signature ? 'Message Signed' : 'Sign with MetaMask'}
             </button>
             {signature && (
-              <p className="wor-signed-note">✓ Signature captured — enter your passkey below.</p>
+              <p className="wor-signed-note">Signature captured — enter your passkey below.</p>
             )}
           </div>
 
           <form onSubmit={handleProceed} className="wor-form">
             <div className="wor-security-field">
               <div className="wor-security-field-header">
-                <span>🔑</span>
                 <label className="wor-form-label">Your Passkey</label>
               </div>
               <input
@@ -306,7 +305,7 @@ export function Report() {
               type="submit"
               disabled={loading}
             >
-              ⚑ Report as Compromised
+              Report as Compromised
             </button>
             <button
               type="button"
@@ -324,7 +323,7 @@ export function Report() {
       {showConfirm && (
         <div className="wor-confirm-overlay" onClick={() => setShowConfirm(false)}>
           <div className="wor-confirm-modal" onClick={e => e.stopPropagation()}>
-            <div className="wor-confirm-icon">⚑</div>
+            <div className="wor-confirm-icon" />
             <h3 className="wor-confirm-title">Confirm Report</h3>
             <p className="wor-confirm-text">
               This will immediately flag your wallet as compromised across OTI. All future

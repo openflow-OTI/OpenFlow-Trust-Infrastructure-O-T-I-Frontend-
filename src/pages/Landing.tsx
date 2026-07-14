@@ -100,11 +100,14 @@ export function Landing() {
               Try It Free
             </Link>
             <Link to="/register" className="marketing-btn marketing-btn--outline marketing-btn--lg">
-              🔒 Register Wallet
+              Register Wallet
             </Link>
             <Link to="/whitepaper" className="marketing-btn marketing-btn--ghost marketing-btn--lg">
               Read Whitepaper
             </Link>
+            <a href="/docs/" className="marketing-btn marketing-btn--ghost marketing-btn--lg">
+              View API Docs
+            </a>
           </div>
           <div className="marketing-hero-chains">
             {HERO_CHAIN_IDS.map((id) => (
@@ -177,10 +180,10 @@ export function Landing() {
           </p>
           <div className="marketing-wor-ctas">
             <Link to="/register" className="marketing-btn marketing-btn--primary marketing-btn--lg">
-              🔒 Register Your Wallet
+              Register Your Wallet
             </Link>
             <Link to="/report" className="marketing-btn marketing-btn--outline">
-              ⚑ Report Compromised Wallet
+              Report Compromised Wallet
             </Link>
           </div>
         </div>

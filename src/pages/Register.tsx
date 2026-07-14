@@ -145,7 +145,7 @@ export function Register() {
     return (
       <div className="wor-page">
         <div className="wor-card wor-card--success">
-          <div className="wor-result-icon wor-result-icon--success">✓</div>
+          <div className="wor-result-icon wor-result-icon--success" />
           <h2 className="wor-card-title">Wallet Registered</h2>
           <p className="wor-card-desc">
             Your wallet is now protected by OTI. If it's ever compromised, visit{' '}
@@ -212,7 +212,7 @@ export function Register() {
           </div>
           <div className="wor-challenge-wrap">
             <div className="wor-challenge-header">
-              <span className="wor-challenge-icon">🔐</span>
+              <span className="wor-challenge-icon" aria-hidden="true" />
               <span className="wor-challenge-label">Challenge Message — Read Before Signing</span>
             </div>
             <div className="wor-message-box">{challengeMessage}</div>
@@ -223,7 +223,7 @@ export function Register() {
           {error && <p className="wor-error">{error}</p>}
           <div className="wor-form" style={{ gap: '0.6rem' }}>
             <button className="wor-btn wor-btn--primary" onClick={handleSign} disabled={loading}>
-              {loading ? 'Waiting for MetaMask…' : '🦊 Sign with MetaMask'}
+              {loading ? 'Waiting for MetaMask…' : 'Sign with MetaMask'}
             </button>
             <button
               className="wor-btn wor-btn--ghost"
@@ -248,7 +248,6 @@ export function Register() {
           <form onSubmit={handleRegister} className="wor-form">
             <div className="wor-security-field">
               <div className="wor-security-field-header">
-                <span>🔑</span>
                 <label className="wor-form-label">Passkey</label>
               </div>
               <input
@@ -264,7 +263,6 @@ export function Register() {
             </div>
             <div className="wor-security-field">
               <div className="wor-security-field-header">
-                <span>🔑</span>
                 <label className="wor-form-label">Confirm Passkey</label>
               </div>
               <input
@@ -278,7 +276,7 @@ export function Register() {
               />
             </div>
             <p className="wor-security-note">
-              ⚠ Store this securely — OTI cannot recover your passkey.
+              Store this securely — OTI cannot recover your passkey.
             </p>
             {error && <p className="wor-error">{error}</p>}
             <button className="wor-btn wor-btn--primary" type="submit" disabled={loading}>

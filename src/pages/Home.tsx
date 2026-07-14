@@ -131,10 +131,9 @@ export function Home() {
 
         <div className="home-wor-links">
           <Link to="/register" className="home-wor-link">
-            🔒 Own this wallet? Register it
+            Own this wallet? Register it
           </Link>
           <Link to="/report" className="home-report-badge">
-            <span className="home-report-badge-icon">⚑</span>
             <span>Report a compromised wallet</span>
           </Link>
         </div>
@@ -219,7 +218,6 @@ export function Home() {
                   to={`/register?address=${encodeURIComponent(wallet)}`}
                   className="results-wor-prompt"
                 >
-                  <span className="results-wor-prompt-icon">🔒</span>
                   <span className="results-wor-prompt-text">
                     Own this wallet? Register it with OTI to protect it.
                   </span>
@@ -249,7 +247,7 @@ export function Home() {
                   href={`/report?address=${encodeURIComponent(wallet)}`}
                   className="results-report-link"
                 >
-                  ⚑ Report this wallet
+                  Report this wallet
                 </a>
               </div>
 
