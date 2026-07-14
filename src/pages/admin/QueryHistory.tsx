@@ -40,8 +40,11 @@ export function QueryHistory() {
     queryKey: ['admin', 'history'],
     queryFn: () => adminFetch<HistoryEntry[]>('/admin/history'),
     retry: false,
+    staleTime: 0,
   })
 
+  // Committed filters — only applied when Search is clicked or Enter is pressed
+  const [addrInput,   setAddrInput]   = useState('')
   const [addrFilter,  setAddrFilter]  = useState('')
   const [chainFilter, setChainFilter] = useState('')
   const [dateFrom,    setDateFrom]    = useState('')
@@ -70,7 +73,12 @@ export function QueryHistory() {
 
   const hasFilters = !!(addrFilter || chainFilter || dateFrom || dateTo)
 
+  function applySearch() {
+    setAddrFilter(addrInput)
+  }
+
   function clearFilters() {
+    setAddrInput('')
     setAddrFilter('')
     setChainFilter('')
     setDateFrom('')
@@ -81,14 +89,23 @@ export function QueryHistory() {
     <div className="admin-section">
       <div className="admin-section-header">
         <h2 className="admin-section-title">Query History</h2>
-        {history.isSuccess && filtered.length > 0 && (
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button
             className="admin-btn admin-btn--ghost"
-            onClick={() => downloadCsv(filtered, hasFilters)}
+            onClick={() => history.refetch()}
+            disabled={history.isFetching}
           >
-            ↓ Export CSV{hasFilters ? ` (${filtered.length.toLocaleString()})` : ''}
+            {history.isFetching ? 'Refreshing…' : '↻ Refresh'}
           </button>
-        )}
+          {history.isSuccess && filtered.length > 0 && (
+            <button
+              className="admin-btn admin-btn--ghost"
+              onClick={() => downloadCsv(filtered, hasFilters)}
+            >
+              ↓ Export CSV{hasFilters ? ` (${filtered.length.toLocaleString()})` : ''}
+            </button>
+          )}
+        </div>
       </div>
 
       {history.isLoading && <p className="admin-loading">Loading history…</p>}
@@ -114,15 +131,17 @@ export function QueryHistory() {
             alignItems: 'flex-end',
             marginBottom: '1rem',
           }}>
+            {/* Address — commits on Search button or Enter */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '1 1 200px', minWidth: 0 }}>
               <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Address
               </label>
               <input
                 className="admin-input"
-                value={addrFilter}
-                onChange={e => setAddrFilter(e.target.value)}
-                placeholder="Filter by address…"
+                value={addrInput}
+                onChange={e => setAddrInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') applySearch() }}
+                placeholder="Search by address…"
                 spellCheck={false}
                 autoCorrect="off"
                 autoCapitalize="off"
@@ -130,6 +149,15 @@ export function QueryHistory() {
               />
             </div>
 
+            <button
+              className="admin-btn admin-btn--primary"
+              onClick={applySearch}
+              style={{ alignSelf: 'flex-end', whiteSpace: 'nowrap' }}
+            >
+              Search
+            </button>
+
+            {/* Chain — applies immediately */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 140px' }}>
               <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Chain
@@ -146,6 +174,7 @@ export function QueryHistory() {
               </select>
             </div>
 
+            {/* Date range — applies immediately */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 140px' }}>
               <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 From
@@ -170,7 +199,7 @@ export function QueryHistory() {
               />
             </div>
 
-            {hasFilters && (
+            {(hasFilters || addrInput) && (
               <button
                 className="admin-btn admin-btn--ghost"
                 onClick={clearFilters}
@@ -183,10 +212,17 @@ export function QueryHistory() {
 
           {/* ── Result count ───────────────────────────────────────── */}
           <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '0.6rem' }}>
-            Showing {filtered.length.toLocaleString()} of {history.data.length.toLocaleString()} result{history.data.length !== 1 ? 's' : ''}
-            {hasFilters && filtered.length === 0 && (
-              <span style={{ color: 'var(--danger)', marginLeft: '0.5rem' }}>— no matches</span>
-            )}
+            {history.data.length === 0
+              ? 'No history recorded yet — scores will appear here after wallets are queried.'
+              : <>
+                  Showing {filtered.length.toLocaleString()} of {history.data.length.toLocaleString()} result{history.data.length !== 1 ? 's' : ''}
+                  {hasFilters && filtered.length === 0 && (
+                    <span style={{ color: 'var(--danger)', marginLeft: '0.5rem' }}>
+                      — no matches. Try a different address or clear the filters.
+                    </span>
+                  )}
+                </>
+            }
           </p>
 
           {/* ── Table ──────────────────────────────────────────────── */}
@@ -217,7 +253,11 @@ export function QueryHistory() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan={4} style={{ textAlign: 'center', color: 'var(--text-dim)' }}>
-                      {hasFilters ? 'No results match the current filters.' : 'No history yet.'}
+                      {history.data.length === 0
+                        ? 'No history yet.'
+                        : hasFilters
+                          ? 'No results match the current filters.'
+                          : 'No history yet.'}
                     </td>
                   </tr>
                 )}

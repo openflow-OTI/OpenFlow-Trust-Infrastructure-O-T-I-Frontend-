@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminFetch } from '@/lib/adminClient'
-import { CHAINS } from '@/lib/chains'
 
 interface CacheStats {
   cacheEnabled: boolean
@@ -9,27 +8,6 @@ interface CacheStats {
   totalCachedWallets: number
   oldestScore: string | null
   newestScore: string | null
-}
-
-interface ScoreResult {
-  address: string
-  chain: string
-  score: number
-  cached: boolean
-  compromised: boolean
-  reason?: string
-}
-
-const SCORE_TIERS = [
-  { min: 80, label: 'HIGHLY TRUSTED', color: '#00e5a0' },
-  { min: 60, label: 'TRUSTED',        color: '#4ade80' },
-  { min: 40, label: 'CAUTION',        color: '#facc15' },
-  { min: 20, label: 'SUSPICIOUS',     color: '#fb923c' },
-  { min: 0,  label: 'HIGH RISK',      color: '#f87171' },
-]
-
-function getTier(score: number) {
-  return SCORE_TIERS.find(t => score >= t.min) ?? SCORE_TIERS[SCORE_TIERS.length - 1]
 }
 
 function fmt(ts: string | null | undefined) {
@@ -111,7 +89,6 @@ export function AdminCache() {
     onSuccess: (_, address) => {
       qc.invalidateQueries({ queryKey: ['admin', 'cache', 'stats'] })
       setClearMsg({ ok: true, text: `Cache cleared for ${address}.` })
-      setScoreAddr(address)
       setClearAddr('')
     },
     onError: (err) => {
@@ -152,35 +129,8 @@ export function AdminCache() {
     clearAllMutation.mutate()
   }
 
-  // ── Quick scorer ─────────────────────────────────────────────────────────
-  const [scoreAddr,   setScoreAddr]   = useState('')
-  const [scoreChain,  setScoreChain]  = useState('ethereum')
-  const [scoring,     setScoring]     = useState(false)
-  const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null)
-  const [scoreErr,    setScoreErr]    = useState<string | null>(null)
-
-  async function handleScore(e: React.FormEvent) {
-    e.preventDefault()
-    const addr = scoreAddr.trim()
-    if (!addr) return
-    setScoring(true)
-    setScoreResult(null)
-    setScoreErr(null)
-    try {
-      const data = await adminFetch<ScoreResult>(
-        `/score/${encodeURIComponent(addr)}?chain=${scoreChain}`
-      )
-      setScoreResult(data)
-    } catch (err) {
-      setScoreErr(err instanceof Error ? err.message : String(err))
-    } finally {
-      setScoring(false)
-    }
-  }
-
   const cacheOn = stats.data?.cacheEnabled ?? false
 
-  // ── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="admin-section">
       <h2 className="admin-section-title">Cache</h2>
@@ -241,7 +191,6 @@ export function AdminCache() {
 
       {/* ── Cache toggle ──────────────────────────────────────────────── */}
       <h3 className="admin-subsection-title">Cache on / off</h3>
-
       <div className="cache-toggle-wrap">
         <label className="cache-toggle-switch" aria-label="Toggle cache">
           <input
@@ -260,7 +209,6 @@ export function AdminCache() {
               : 'OFF — live data only, nothing cached'}
         </span>
       </div>
-
       {toggleMutation.isError && (
         <p className="admin-error" style={{ marginBottom: '1.5rem' }}>
           {toggleMutation.error instanceof Error ? toggleMutation.error.message : String(toggleMutation.error)}
@@ -330,14 +278,6 @@ export function AdminCache() {
         {clearMsg && (
           <p className={clearMsg.ok ? 'admin-success' : 'admin-error'} style={{ marginTop: '0.5rem' }}>
             {clearMsg.text}
-            {clearMsg.ok && (
-              <span
-                style={{ marginLeft: '0.6rem', color: 'var(--mint)', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.85em' }}
-                onClick={() => document.getElementById('cache-quick-score-addr')?.focus()}
-              >
-                Score it now ↓
-              </span>
-            )}
           </p>
         )}
       </form>
@@ -361,104 +301,6 @@ export function AdminCache() {
           {clearAllMsg.text}
         </p>
       )}
-
-      <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '2rem 0' }} />
-
-      {/* ── Quick scorer ──────────────────────────────────────────────── */}
-      <h3 className="admin-subsection-title">Score a wallet</h3>
-      <p className="admin-section-desc">
-        Fetch a live score immediately — useful right after clearing a wallet's cache.
-        {scoreAddr && <span style={{ color: 'var(--mint)', marginLeft: '0.4rem' }}>Address pre-filled from last clear.</span>}
-      </p>
-      <form className="admin-form" onSubmit={handleScore} style={{ maxWidth: 480 }}>
-        <div className="admin-form-row">
-          <label>Wallet address</label>
-          <input
-            id="cache-quick-score-addr"
-            className="admin-input"
-            value={scoreAddr}
-            onChange={e => { setScoreAddr(e.target.value); setScoreResult(null); setScoreErr(null) }}
-            placeholder="0x… or base58…"
-            spellCheck={false}
-            autoCorrect="off"
-            autoCapitalize="off"
-          />
-        </div>
-        <div className="admin-form-row">
-          <label>Chain</label>
-          <select
-            className="admin-input"
-            value={scoreChain}
-            onChange={e => { setScoreChain(e.target.value); setScoreResult(null); setScoreErr(null) }}
-          >
-            {CHAINS.map(c => (
-              <option key={c.id} value={c.id}>{c.label}</option>
-            ))}
-          </select>
-        </div>
-        <button
-          className="admin-btn admin-btn--primary"
-          type="submit"
-          disabled={scoring || !scoreAddr.trim()}
-        >
-          {scoring ? 'Scoring…' : '▶ Score now'}
-        </button>
-
-        {scoreErr && (
-          <p className="admin-error" style={{ marginTop: '0.6rem' }}>{scoreErr}</p>
-        )}
-
-        {scoreResult && !scoreResult.compromised && (() => {
-          const tier = getTier(scoreResult.score)
-          return (
-            <div style={{
-              marginTop: '0.75rem',
-              padding: '0.9rem 1.1rem',
-              background: 'rgba(0,229,160,0.04)',
-              border: `1px solid ${tier.color}33`,
-              borderRadius: 8,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              flexWrap: 'wrap',
-            }}>
-              <span style={{ fontSize: '2rem', fontWeight: 700, color: tier.color, lineHeight: 1 }}>
-                {scoreResult.score}
-              </span>
-              <div>
-                <span style={{
-                  fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em',
-                  color: tier.color, border: `1px solid ${tier.color}`, borderRadius: 4,
-                  padding: '2px 8px', display: 'inline-block',
-                }}>
-                  {tier.label}
-                </span>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 4 }}>
-                  {scoreResult.chain} · {scoreResult.address.slice(0, 16)}…
-                  {scoreResult.cached && (
-                    <span style={{ marginLeft: 6, opacity: 0.6 }}>(cached)</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          )
-        })()}
-
-        {scoreResult?.compromised && (
-          <div style={{
-            marginTop: '0.75rem',
-            padding: '0.9rem 1.1rem',
-            background: 'rgba(248,113,113,0.08)',
-            border: '1px solid #f87171',
-            borderRadius: 8,
-            color: '#fca5a5',
-            fontSize: '0.85rem',
-          }}>
-            <strong>⚠ Compromised wallet</strong>
-            {scoreResult.reason && <div style={{ marginTop: 4, opacity: 0.8 }}>{scoreResult.reason}</div>}
-          </div>
-        )}
-      </form>
     </div>
   )
 }
