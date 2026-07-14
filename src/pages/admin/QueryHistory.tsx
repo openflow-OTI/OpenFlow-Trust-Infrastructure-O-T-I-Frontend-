@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { adminFetch } from '@/lib/adminClient'
 import { CopyButton } from './CopyButton'
+import { CHAINS } from '@/lib/chains'
 
 interface HistoryEntry {
   address: string
@@ -50,10 +51,6 @@ export function QueryHistory() {
   const [dateFrom,    setDateFrom]    = useState('')
   const [dateTo,      setDateTo]      = useState('')
 
-  const chains = useMemo(() => {
-    if (!history.data) return []
-    return Array.from(new Set(history.data.map(r => r.chain))).sort()
-  }, [history.data])
 
   const filtered = useMemo(() => {
     if (!history.data) return []
@@ -168,8 +165,8 @@ export function QueryHistory() {
                 onChange={e => setChainFilter(e.target.value)}
               >
                 <option value="">All chains</option>
-                {chains.map(c => (
-                  <option key={c} value={c}>{c}</option>
+                {CHAINS.map(c => (
+                  <option key={c.id} value={c.id}>{c.label}</option>
                 ))}
               </select>
             </div>
