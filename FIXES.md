@@ -59,8 +59,8 @@
 
 ---
 
-### BF11 — Re-verify "Try It Live" Widget Against Railway Backend 🔴 OPEN
-**Priority:** Low-medium, small effort. The docs site's "Try It Live" widget had its API URL reverted during the Task 11 (docs site) remediation, but was never re-checked live after the redeploys. Just needs a live check that it's actually hitting the real Railway backend, not a stale/dev URL. Not yet assigned to a Builder.
+### BF11 — Re-verify "Try It Live" Widget Against Railway Backend ✅
+**Fixed:** July 13, 2026. Confirmed `API_BASE` in `oti-docs/src/components/WalletScorer.jsx` is set to the correct Railway URL. Live test against Vitalik's wallet returned score 96 with full weighted signal breakdown. No URL change needed.
 
 ### BF12 — Railway Deploys Don't Auto-Run Migrations 🔴 OPEN (optional)
 **Priority:** Low, small effort, not urgent. Confirmed July 5, 2026: Railway's deploy pipeline only runs `pnpm install && build && start` — it does **not** run `drizzle-kit push`. Every schema change currently needs Ahmad to manually run the migration against the Railway production DB after deploying (this is how BF3 above was applied). Optional fix: add `drizzle-kit push` to `railway.json`'s `buildCommand` (a one-line change — NOT to `nixpacks.toml`, which stays sacred). Not yet assigned; only worth doing if Ahmad wants to remove the manual step.
@@ -136,6 +136,9 @@
 
 ### FF21 — Docs Site Vercel Build Config Broken for Subproject ✅
 **Fixed:** July 12, 2026. oti-docs/vercel.json build configuration fixed so the docs subproject builds and deploys correctly on Vercel. Verified live.
+
+### BF23 — Remove Scroll, Sepolia, Holesky (Frontend Side) ✅
+**Fixed:** July 13, 2026. Audited all frontend surfaces. `src/lib/chains.ts`, `oti-docs/docs/supported-chains.md`, and `oti-docs/src/components/WalletScorer.jsx` were already absent. Removed Scroll, Sepolia, and Holesky from the EVM chain list in `src/pages/Whitepaper.tsx` Section 06. The "15 blockchain networks" count is unchanged — BNB Smart Chain, Base, and Optimism fill those three slots as temporarily unavailable chains.
 
 ---
 
