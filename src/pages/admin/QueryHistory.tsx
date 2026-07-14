@@ -11,6 +11,13 @@ interface HistoryEntry {
   timestamp: string
 }
 
+interface WalletHistoryEntry {
+  address: string
+  chain: string
+  score: number
+  scored_at: string
+}
+
 function escapeCsv(val: string | number): string {
   const s = String(val)
   return s.includes(',') || s.includes('"') || s.includes('\n')
@@ -36,6 +43,122 @@ function downloadCsv(rows: HistoryEntry[], hasFilters: boolean) {
   URL.revokeObjectURL(url)
 }
 
+const SCORE_TIERS = [
+  { min: 80, label: 'HIGHLY TRUSTED', color: '#00e5a0' },
+  { min: 60, label: 'TRUSTED',        color: '#4ade80' },
+  { min: 40, label: 'CAUTION',        color: '#facc15' },
+  { min: 20, label: 'SUSPICIOUS',     color: '#fb923c' },
+  { min: 0,  label: 'HIGH RISK',      color: '#f87171' },
+]
+
+function getTier(score: number) {
+  return SCORE_TIERS.find(t => score >= t.min) ?? SCORE_TIERS[SCORE_TIERS.length - 1]
+}
+
+function ScoreBadge({ score }: { score: number }) {
+  const tier = getTier(score)
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+      <span style={{ fontWeight: 600, color: tier.color }}>{score}</span>
+    </span>
+  )
+}
+
+function WalletHistoryPanel({ address, onClose }: { address: string; onClose: () => void }) {
+  const wh = useQuery({
+    queryKey: ['wallet-history', address],
+    queryFn: () => adminFetch<WalletHistoryEntry[]>(`/score/${encodeURIComponent(address)}/history`),
+    retry: false,
+    staleTime: 30_000,
+  })
+
+  return (
+    <tr>
+      <td colSpan={4} style={{ padding: 0 }}>
+        <div style={{
+          background: 'rgba(0,229,160,0.03)',
+          borderTop: '1px solid var(--mint)',
+          borderBottom: '1px solid var(--border)',
+          padding: '1rem 1.1rem',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+            <div>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                Score history for
+              </span>
+              <div style={{ fontSize: '0.8rem', color: 'var(--mint)', fontFamily: 'monospace', marginTop: 2, wordBreak: 'break-all' }}>
+                {address}
+              </div>
+            </div>
+            <button
+              className="admin-btn admin-btn--ghost"
+              onClick={onClose}
+              style={{ flexShrink: 0, marginLeft: '1rem' }}
+            >
+              ✕ Close
+            </button>
+          </div>
+
+          {wh.isLoading && (
+            <p className="admin-loading" style={{ margin: 0 }}>Loading history…</p>
+          )}
+
+          {wh.isError && (
+            <p className="admin-error" style={{ margin: 0 }}>
+              {wh.error instanceof Error ? wh.error.message : 'Failed to load history'}
+            </p>
+          )}
+
+          {wh.isSuccess && wh.data.length === 0 && (
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)', margin: 0 }}>
+              No historical records found for this wallet.
+            </p>
+          )}
+
+          {wh.isSuccess && wh.data.length > 0 && (
+            <table className="admin-table" style={{ marginTop: 0 }}>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Chain</th>
+                  <th>Score</th>
+                  <th>Scored at</th>
+                </tr>
+              </thead>
+              <tbody>
+                {wh.data.map((entry, i) => {
+                  const tier = getTier(entry.score)
+                  return (
+                    <tr key={i}>
+                      <td style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>{i + 1}</td>
+                      <td>{entry.chain}</td>
+                      <td>
+                        <span style={{ fontWeight: 600, color: tier.color }}>{entry.score}</span>
+                        <span style={{
+                          marginLeft: 6,
+                          fontSize: '0.65rem',
+                          color: tier.color,
+                          border: `1px solid ${tier.color}`,
+                          borderRadius: 3,
+                          padding: '1px 5px',
+                          opacity: 0.8,
+                        }}>
+                          {tier.label}
+                        </span>
+                      </td>
+                      <td>{new Date(entry.scored_at).toLocaleString()}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </td>
+    </tr>
+  )
+}
+
 export function QueryHistory() {
   const history = useQuery({
     queryKey: ['admin', 'history'],
@@ -44,13 +167,13 @@ export function QueryHistory() {
     staleTime: 0,
   })
 
-  // Committed filters — only applied when Search is clicked or Enter is pressed
-  const [addrInput,   setAddrInput]   = useState('')
-  const [addrFilter,  setAddrFilter]  = useState('')
-  const [chainFilter, setChainFilter] = useState('')
-  const [dateFrom,    setDateFrom]    = useState('')
-  const [dateTo,      setDateTo]      = useState('')
-  const [scoreSearch, setScoreSearch] = useState<number | ''>('')
+  const [addrInput,    setAddrInput]    = useState('')
+  const [addrFilter,   setAddrFilter]   = useState('')
+  const [chainFilter,  setChainFilter]  = useState('')
+  const [dateFrom,     setDateFrom]     = useState('')
+  const [dateTo,       setDateTo]       = useState('')
+  const [scoreSearch,  setScoreSearch]  = useState<number | ''>('')
+  const [selectedAddr, setSelectedAddr] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     if (!history.data) return []
@@ -82,6 +205,10 @@ export function QueryHistory() {
     setDateFrom('')
     setDateTo('')
     setScoreSearch('')
+  }
+
+  function toggleAddress(addr: string) {
+    setSelectedAddr(prev => prev === addr ? null : addr)
   }
 
   return (
@@ -156,7 +283,7 @@ export function QueryHistory() {
               Search
             </button>
 
-            {/* Chain — applies immediately */}
+            {/* Chain */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 140px' }}>
               <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Chain
@@ -173,7 +300,7 @@ export function QueryHistory() {
               </select>
             </div>
 
-            {/* Score search — applies immediately */}
+            {/* Score */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 100px' }}>
               <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 Score
@@ -189,7 +316,7 @@ export function QueryHistory() {
               />
             </div>
 
-            {/* Date range — applies immediately */}
+            {/* Date range */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 140px' }}>
               <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                 From
@@ -236,6 +363,9 @@ export function QueryHistory() {
                       — no matches. Try a different address or clear the filters.
                     </span>
                   )}
+                  {filtered.length > 0 && (
+                    <span style={{ marginLeft: '0.5rem', opacity: 0.6 }}>— click any row to see full wallet history</span>
+                  )}
                 </>
             }
           </p>
@@ -253,17 +383,36 @@ export function QueryHistory() {
               </thead>
               <tbody>
                 {filtered.map((r, i) => (
-                  <tr key={i}>
-                    <td className="admin-td-mono">
-                      <span className="admin-copy-row">
-                        <span>{r.address}</span>
-                        <CopyButton value={r.address} />
-                      </span>
-                    </td>
-                    <td>{r.chain}</td>
-                    <td>{r.score}</td>
-                    <td>{new Date(r.timestamp).toLocaleString()}</td>
-                  </tr>
+                  <>
+                    <tr
+                      key={`row-${i}`}
+                      onClick={() => toggleAddress(r.address)}
+                      style={{
+                        cursor: 'pointer',
+                        background: selectedAddr === r.address ? 'rgba(0,229,160,0.06)' : undefined,
+                        borderLeft: selectedAddr === r.address ? '2px solid var(--mint)' : '2px solid transparent',
+                      }}
+                    >
+                      <td className="admin-td-mono">
+                        <span className="admin-copy-row">
+                          <span style={{ color: selectedAddr === r.address ? 'var(--mint)' : undefined }}>
+                            {r.address}
+                          </span>
+                          <CopyButton value={r.address} />
+                        </span>
+                      </td>
+                      <td>{r.chain}</td>
+                      <td><ScoreBadge score={r.score} /></td>
+                      <td>{new Date(r.timestamp).toLocaleString()}</td>
+                    </tr>
+                    {selectedAddr === r.address && (
+                      <WalletHistoryPanel
+                        key={`panel-${r.address}`}
+                        address={r.address}
+                        onClose={() => setSelectedAddr(null)}
+                      />
+                    )}
+                  </>
                 ))}
                 {filtered.length === 0 && (
                   <tr>
