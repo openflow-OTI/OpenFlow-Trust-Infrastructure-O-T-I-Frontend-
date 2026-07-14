@@ -158,8 +158,8 @@
 ### FF26 — Query History Chain Filter Shows All 15 Chains ✅
 **Fixed:** July 14, 2026. The chain dropdown in `src/pages/admin/QueryHistory.tsx` was dynamically built from whichever chains appeared in the fetched results — so sessions with only bitcoin/ethereum data showed only those two options. Fixed by replacing the dynamic `useMemo` derivation with the static `CHAINS` list from `src/lib/chains.ts`, so all 15 chains are always available.
 
-### FF27 — Query History Score Range Filter ✅
-**Fixed:** July 14, 2026. Added Score min and Score max number inputs to the filter bar in `src/pages/admin/QueryHistory.tsx`. Filters instantly on the already-fetched data (no API call). Works in combination with address, chain, and date filters. ✕ Clear resets both score bounds. `hasFilters` check updated to include non-empty score bounds.
+### FF27 — Query History Score Search Filter ✅
+**Fixed:** July 14, 2026. Added a Score search input to the filter bar in `src/pages/admin/QueryHistory.tsx`. Type any score value (0–100) to instantly show only history entries where the wallet's last score exactly matches. Works in combination with address, chain, and date filters. ✕ Clear resets it. No API call — filters on already-fetched data via useMemo.
 
 ---
 

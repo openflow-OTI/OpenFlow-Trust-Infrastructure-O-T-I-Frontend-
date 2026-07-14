@@ -50,30 +50,26 @@ export function QueryHistory() {
   const [chainFilter, setChainFilter] = useState('')
   const [dateFrom,    setDateFrom]    = useState('')
   const [dateTo,      setDateTo]      = useState('')
-  const [scoreMin,    setScoreMin]    = useState<number | ''>('')
-  const [scoreMax,    setScoreMax]    = useState<number | ''>('')
+  const [scoreSearch, setScoreSearch] = useState<number | ''>('')
 
   const filtered = useMemo(() => {
     if (!history.data) return []
     const addr = addrFilter.trim().toLowerCase()
     const from = dateFrom ? new Date(dateFrom).getTime() : null
     const to   = dateTo   ? new Date(dateTo + 'T23:59:59').getTime() : null
-    const sMin = scoreMin !== '' ? Number(scoreMin) : null
-    const sMax = scoreMax !== '' ? Number(scoreMax) : null
 
     return history.data.filter(r => {
-      if (addr        && !r.address.toLowerCase().includes(addr)) return false
-      if (chainFilter && r.chain !== chainFilter)                  return false
-      if (sMin !== null && r.score < sMin) return false
-      if (sMax !== null && r.score > sMax) return false
+      if (addr         && !r.address.toLowerCase().includes(addr)) return false
+      if (chainFilter  && r.chain !== chainFilter)                  return false
+      if (scoreSearch !== '' && r.score !== Number(scoreSearch))    return false
       const ts = new Date(r.timestamp).getTime()
       if (from && ts < from) return false
       if (to   && ts > to)   return false
       return true
     })
-  }, [history.data, addrFilter, chainFilter, dateFrom, dateTo, scoreMin, scoreMax])
+  }, [history.data, addrFilter, chainFilter, dateFrom, dateTo, scoreSearch])
 
-  const hasFilters = !!(addrFilter || chainFilter || dateFrom || dateTo || scoreMin !== '' || scoreMax !== '')
+  const hasFilters = !!(addrFilter || chainFilter || dateFrom || dateTo || scoreSearch !== '')
 
   function applySearch() {
     setAddrFilter(addrInput)
@@ -85,8 +81,7 @@ export function QueryHistory() {
     setChainFilter('')
     setDateFrom('')
     setDateTo('')
-    setScoreMin('')
-    setScoreMax('')
+    setScoreSearch('')
   }
 
   return (
@@ -178,34 +173,19 @@ export function QueryHistory() {
               </select>
             </div>
 
-            {/* Score range — applies immediately */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 90px' }}>
+            {/* Score search — applies immediately */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 100px' }}>
               <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                Score min
+                Score
               </label>
               <input
                 className="admin-input"
                 type="number"
                 min={0}
                 max={100}
-                value={scoreMin}
-                onChange={e => setScoreMin(e.target.value === '' ? '' : Number(e.target.value))}
-                placeholder="0"
-              />
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: '0 0 90px' }}>
-              <label style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                Score max
-              </label>
-              <input
-                className="admin-input"
-                type="number"
-                min={0}
-                max={100}
-                value={scoreMax}
-                onChange={e => setScoreMax(e.target.value === '' ? '' : Number(e.target.value))}
-                placeholder="100"
+                value={scoreSearch}
+                onChange={e => setScoreSearch(e.target.value === '' ? '' : Number(e.target.value))}
+                placeholder="e.g. 85"
               />
             </div>
 
