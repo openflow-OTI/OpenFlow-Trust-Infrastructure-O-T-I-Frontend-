@@ -3721,7 +3721,7 @@ textarea {
 
 .wor-step-label {
   font-size: 0.6rem;
-  color: var(--text-dim);
+  color: var(--text);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -3816,14 +3816,14 @@ textarea {
 
 .wor-card-desc {
   font-size: 0.82rem;
-  color: var(--text-dim);
+  color: var(--text);
   margin: 0;
   line-height: 1.75;
 }
 
 .wor-card-footer {
   font-size: 0.72rem;
-  color: var(--text-dim);
+  color: var(--text);
   margin: 0;
   text-align: center;
   padding-top: 0.5rem;
@@ -3862,7 +3862,7 @@ textarea {
 
 .wor-form-label {
   font-size: 0.65rem;
-  color: var(--text-dim);
+  color: var(--text);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   font-weight: 600;
@@ -3947,9 +3947,8 @@ textarea {
 
 .wor-challenge-note {
   font-size: 0.7rem;
-  color: var(--text-dim);
+  color: var(--text);
   margin: 0;
-  opacity: 0.8;
 }
 
 /* ── Security field (passkey) ── */
@@ -3994,7 +3993,7 @@ textarea {
 
 .wor-signed-note {
   font-size: 0.72rem;
-  color: var(--accent);
+  color: var(--text);
   text-align: center;
   letter-spacing: 0.02em;
   margin: 0;
@@ -4162,7 +4161,7 @@ textarea {
 
 .wor-confirm-text {
   font-size: 0.82rem;
-  color: var(--text-dim);
+  color: var(--text);
   margin: 0;
   line-height: 1.7;
   -webkit-user-select: text;
@@ -4250,7 +4249,7 @@ textarea {
 
 .marketing-wor-sub {
   font-size: 1rem;
-  color: var(--text-dim);
+  color: var(--text);
   max-width: 520px;
   line-height: 1.7;
   margin: 0;

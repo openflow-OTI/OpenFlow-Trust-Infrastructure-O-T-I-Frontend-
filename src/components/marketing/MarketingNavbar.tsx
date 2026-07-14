@@ -58,6 +58,9 @@ export function MarketingNavbar() {
           <Link to="/score" className="marketing-btn marketing-btn--outline marketing-btn--sm">
             Score a Wallet
           </Link>
+          <Link to="/register" className="marketing-btn marketing-btn--primary marketing-btn--sm">
+            🔒 Register Wallet
+          </Link>
           <a href="/docs/" className="marketing-navbar-link">API Docs</a>
           <Link to="/whitepaper" className="marketing-navbar-link">Whitepaper</Link>
           {socials}
@@ -83,6 +86,13 @@ export function MarketingNavbar() {
             onClick={() => setOpen(false)}
           >
             Score a Wallet
+          </Link>
+          <Link
+            to="/register"
+            className="marketing-btn marketing-btn--primary marketing-btn--sm"
+            onClick={() => setOpen(false)}
+          >
+            🔒 Register Wallet
           </Link>
           <a href="/docs/" className="marketing-navbar-link" onClick={() => setOpen(false)}>
             API Docs

@@ -99,12 +99,12 @@ export function Landing() {
             <Link to="/score" className="marketing-btn marketing-btn--primary marketing-btn--lg">
               Try It Free
             </Link>
-            <Link to="/whitepaper" className="marketing-btn marketing-btn--outline marketing-btn--lg">
+            <Link to="/register" className="marketing-btn marketing-btn--outline marketing-btn--lg">
+              🔒 Register Wallet
+            </Link>
+            <Link to="/whitepaper" className="marketing-btn marketing-btn--ghost marketing-btn--lg">
               Read Whitepaper
             </Link>
-            <a href="/docs/" className="marketing-btn marketing-btn--ghost marketing-btn--lg">
-              View API Docs
-            </a>
           </div>
           <div className="marketing-hero-chains">
             {HERO_CHAIN_IDS.map((id) => (
@@ -176,10 +176,10 @@ export function Landing() {
             one signed message flags it instantly — warning anyone who checks it before transacting.
           </p>
           <div className="marketing-wor-ctas">
-            <Link to="/register" className="marketing-btn marketing-btn--outline">
-              🔒 Register a Wallet
+            <Link to="/register" className="marketing-btn marketing-btn--primary marketing-btn--lg">
+              🔒 Register Your Wallet
             </Link>
-            <Link to="/report" className="marketing-btn marketing-btn--ghost">
+            <Link to="/report" className="marketing-btn marketing-btn--outline">
               ⚑ Report Compromised Wallet
             </Link>
           </div>
