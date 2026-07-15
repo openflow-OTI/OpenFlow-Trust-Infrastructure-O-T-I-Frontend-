@@ -1,13 +1,15 @@
 /**
- * Multi-wallet connector — zero API keys required.
+ * Multi-wallet connector — zero API keys, zero native dependencies.
  *
  * Strategy:
  *  1. EIP-6963  — auto-discovers every installed browser-extension wallet
- *                 (MetaMask, Rainbow, Coinbase ext, Brave, etc.)
- *  2. Coinbase Wallet SDK v4 — free, no project ID, works on mobile Chrome
- *                              via deep-link / QR to the Coinbase Wallet app
- *  3. Mobile deep-links — fallback links that open the page inside a wallet's
- *                         built-in browser when no extension is present
+ *                 (MetaMask, Rainbow, Coinbase ext, Brave, Trust ext, etc.)
+ *  2. Mobile deep-links — opens the current page inside a wallet's built-in
+ *                         browser when no extension is present on mobile
+ *
+ * No WalletConnect project ID and no Coinbase Wallet SDK needed.
+ * Coinbase Wallet extension is detected automatically via EIP-6963.
+ * On mobile, Coinbase Wallet (and others) are reached via deep-link.
  */
 
 // ---------------------------------------------------------------------------
@@ -21,14 +23,14 @@ export interface WalletProvider {
 export interface DiscoveredWallet {
   id: string
   name: string
-  icon: string          // data-URI SVG/PNG from the wallet itself
+  icon: string          // data-URI SVG/PNG supplied by the wallet itself
   provider: WalletProvider
-  kind: 'eip6963' | 'coinbase' | 'deeplink'
+  kind: 'eip6963' | 'deeplink'
   href?: string         // only for deep-link entries
 }
 
 // ---------------------------------------------------------------------------
-// EIP-6963 discovery
+// EIP-6963 — discovers every installed wallet extension automatically
 // ---------------------------------------------------------------------------
 
 export async function discoverEIP6963Wallets(): Promise<DiscoveredWallet[]> {
@@ -43,13 +45,7 @@ export async function discoverEIP6963Wallets(): Promise<DiscoveredWallet[]> {
     const { info, provider } = e.detail
     if (!seen.has(info.uuid)) {
       seen.add(info.uuid)
-      found.push({
-        id: info.uuid,
-        name: info.name,
-        icon: info.icon,
-        provider,
-        kind: 'eip6963',
-      })
+      found.push({ id: info.uuid, name: info.name, icon: info.icon, provider, kind: 'eip6963' })
     }
   }
 
@@ -62,35 +58,18 @@ export async function discoverEIP6963Wallets(): Promise<DiscoveredWallet[]> {
 }
 
 // ---------------------------------------------------------------------------
-// Coinbase Wallet SDK (free, no project ID)
-// ---------------------------------------------------------------------------
-
-let _cbProvider: WalletProvider | null = null
-
-export async function getCoinbaseWalletProvider(): Promise<WalletProvider> {
-  if (_cbProvider) return _cbProvider
-  const { CoinbaseWalletSDK } = await import('@coinbase/wallet-sdk')
-  const sdk = new CoinbaseWalletSDK({
-    appName: 'OTI — OpenFlow Trust Infrastructure',
-    appChainIds: [1, 137, 42161, 56, 10],   // mainnet, polygon, arb, bsc, op
-  })
-  _cbProvider = sdk.makeWeb3Provider() as unknown as WalletProvider
-  return _cbProvider
-}
-
-export const COINBASE_WALLET_ENTRY: Omit<DiscoveredWallet, 'provider'> = {
-  id: 'coinbase-wallet-sdk',
-  name: 'Coinbase Wallet',
-  icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMDUyRkYiLz48cmVjdCB4PSIzMCIgeT0iMzciIHdpZHRoPSI0MCIgaGVpZ2h0PSIyNiIgcng9IjYiIGZpbGw9IndoaXRlIi8+PC9zdmc+',
-  kind: 'coinbase',
-}
-
-// ---------------------------------------------------------------------------
-// Mobile deep-links (open page inside wallet's browser — no WalletConnect needed)
+// Mobile deep-links — open dapp inside a wallet's built-in browser
+// No SDK or API key required.
 // ---------------------------------------------------------------------------
 
 export function isMobile(): boolean {
   return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+}
+
+// Placeholder icon for wallets without a logo in the deep-link list
+function letterIcon(letter: string, bg: string): string {
+  const svg = `<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="${bg}"/><text x="50" y="56" text-anchor="middle" fill="white" font-size="44" font-family="sans-serif" font-weight="bold">${letter}</text></svg>`
+  return `data:image/svg+xml;base64,${btoa(svg)}`
 }
 
 export function getMobileDeepLinks(): DiscoveredWallet[] {
@@ -100,25 +79,33 @@ export function getMobileDeepLinks(): DiscoveredWallet[] {
 
   return [
     {
-      id: 'deeplink-metamask',
+      id: 'dl-metamask',
       name: 'MetaMask',
-      icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiNGNjg1MUIiLz48dGV4dCB4PSI1MCIgeT0iNTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjM2IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+TTwvdGV4dD48L3N2Zz4=',
+      icon: letterIcon('M', '#F6851B'),
       provider: null as unknown as WalletProvider,
       kind: 'deeplink',
       href: `https://metamask.app.link/dapp/${host}`,
     },
     {
-      id: 'deeplink-rainbow',
+      id: 'dl-coinbase',
+      name: 'Coinbase Wallet',
+      icon: letterIcon('C', '#0052FF'),
+      provider: null as unknown as WalletProvider,
+      kind: 'deeplink',
+      href: `https://go.cb-wallet.io/wsegue?uri=ethereum-${enc}`,
+    },
+    {
+      id: 'dl-rainbow',
       name: 'Rainbow',
-      icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiM3NzRFRjAiLz48dGV4dCB4PSI1MCIgeT0iNTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjM2IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+UjwvdGV4dD48L3N2Zz4=',
+      icon: letterIcon('R', '#774EF0'),
       provider: null as unknown as WalletProvider,
       kind: 'deeplink',
       href: `https://rnbwapp.com/dapp?url=${enc}`,
     },
     {
-      id: 'deeplink-trust',
+      id: 'dl-trust',
       name: 'Trust Wallet',
-      icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMzMzc1QkIiLz48dGV4dCB4PSI1MCIgeT0iNTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjM2IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+VDwvdGV4dD48L3N2Zz4=',
+      icon: letterIcon('T', '#3375BB'),
       provider: null as unknown as WalletProvider,
       kind: 'deeplink',
       href: `https://link.trustwallet.com/open_url?coin_id=60&url=${enc}`,
