@@ -3,29 +3,52 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { worFetch } from '@/lib/worClient'
 import { WalletPickerModal } from '@/components/WalletPickerModal'
 import { signWithProvider, type WalletProvider } from '@/lib/walletConnector'
+import { Logo } from '@/components/Logo'
 
-type Step = 1 | 2 | 3
+type Step = 1 | 2 | 3 | 4
 
-const STEP_LABELS = ['Address', 'Verify', 'Result']
+const STEP_LABELS = ['Address', 'Sign', 'Passkey', 'Done']
+
+function parseChallengeMessage(raw: string) {
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean)
+  let title = '', address = '', timestamp = '', notice = ''
+  for (const line of lines) {
+    if (line.startsWith('Address:'))          address   = line.slice(8).trim()
+    else if (line.startsWith('Timestamp:'))   timestamp = line.slice(10).trim()
+    else if (line.toLowerCase().startsWith('do not')) notice = line
+    else if (line) title = line
+  }
+  return { title, address, timestamp, notice }
+}
+
+function fmtTimestamp(iso: string): string {
+  try {
+    const d = new Date(iso)
+    const date = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })
+    const time = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'UTC' })
+    return `${date} · ${time} UTC`
+  } catch { return iso }
+}
+
+function fmtAddress(addr: string): string {
+  if (addr.length > 20) return `${addr.slice(0, 10)}…${addr.slice(-6)}`
+  return addr
+}
 
 function Stepper({ step }: { step: Step }) {
   return (
     <div className="wor-stepper">
-      {[1, 2, 3].map((n, i) => (
+      {([1, 2, 3, 4] as Step[]).map((n, i) => (
         <div key={n} className="wor-stepper-segment">
           <div className="wor-stepper-node">
-            <div
-              className={`wor-step-dot${step > n ? ' wor-step-dot--done' : step === n ? ' wor-step-dot--active' : ''}`}
-            >
+            <div className={`wor-step-dot${step > n ? ' wor-step-dot--done' : step === n ? ' wor-step-dot--active' : ''}`}>
               {step > n ? '✓' : n}
             </div>
             <span className={`wor-step-label${step === n ? ' wor-step-label--active' : ''}`}>
               {STEP_LABELS[i]}
             </span>
           </div>
-          {n < 3 && (
-            <div className={`wor-step-line${step > n ? ' wor-step-line--done' : ''}`} />
-          )}
+          {n < 4 && <div className={`wor-step-line${step > n ? ' wor-step-line--done' : ''}`} />}
         </div>
       ))}
     </div>
@@ -58,68 +81,55 @@ export function Report() {
     e.preventDefault()
     const addr = address.trim()
     if (!addr) return
-    setLoading(true)
-    setError(null)
+    setLoading(true); setError(null)
     try {
       const { data, status } = await worFetch<{ status?: string }>(
         `/wallet/registration-status/${encodeURIComponent(addr)}`
       )
       if (status === 404 || !data.status || data.status === 'not_registered') {
-        setError('This address is not registered with OTI. You must register first to enable self-reporting.')
+        setError('This address is not registered with OTI. Register first to enable self-reporting.')
         return
       }
       if (data.status === 'compromised') {
-        setError('This wallet is already flagged as compromised in OTI.')
-        return
+        setError('This wallet is already flagged as compromised.'); return
       }
-      await loadChallenge(addr)
+      const { data: cd } = await worFetch<{ message?: string }>(
+        `/wallet/register/challenge?address=${encodeURIComponent(addr)}&chain_family=evm`
+      )
+      if (!cd.message) throw new Error('No challenge message returned from server.')
+      setChallengeMessage(cd.message)
+      setStep(2)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to check registration status.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function loadChallenge(addr: string) {
-    const { data } = await worFetch<{ message?: string }>(
-      `/wallet/register/challenge?address=${encodeURIComponent(addr)}&chain_family=evm`
-    )
-    if (!data.message) throw new Error('No challenge message returned from server.')
-    setChallengeMessage(data.message)
-    setStep(2)
+    } finally { setLoading(false) }
   }
 
   async function handleWalletSelected(provider: WalletProvider, name: string) {
-    setShowPicker(false)
-    setWalletName(name)
-    setLoading(true)
-    setError(null)
+    setShowPicker(false); setWalletName(name)
+    setLoading(true); setError(null)
     try {
       const { signature: sig } = await signWithProvider(provider, challengeMessage)
       setSignature(sig)
+      setStep(3) // auto-advance to passkey step
     } catch (err: unknown) {
       const e = err as { code?: number; message?: string }
       if (e?.code === 4001 || e?.message?.includes('rejected') || e?.message?.includes('denied')) {
-        setError('Signature request cancelled.')
+        setError('Signature cancelled.')
       } else {
         setError(e?.message ?? 'Failed to sign message.')
       }
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
-  function handleProceed(e: React.FormEvent) {
+  function handlePasskeySubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!signature) { setError('You must sign the challenge message first.'); return }
-    if (!passkey) { setError('Enter your passkey.'); return }
+    if (!passkey.trim()) { setError('Enter your passkey.'); return }
     setShowConfirm(true)
   }
 
   async function handleConfirmedSubmit() {
     setShowConfirm(false)
-    setLoading(true)
-    setError(null)
+    setLoading(true); setError(null)
     try {
       const { status, data } = await worFetch('/report/compromised', {
         method: 'POST',
@@ -130,71 +140,31 @@ export function Report() {
           passkey,
         }),
       })
-      setStep(3)
       if (status === 200 || status === 201) {
         setResult({ kind: 'success' })
       } else if (status === 401) {
         setResult({ kind: 'error', code: 401, message: 'Verification failed. Check your passkey and try again.' })
       } else if (status === 404) {
-        setResult({ kind: 'error', code: 404, message: 'Address not registered. Register first to enable self-reporting.' })
+        setResult({ kind: 'error', code: 404, message: 'Address not registered. Register first.' })
       } else if (status === 409) {
         setResult({ kind: 'error', code: 409, message: 'Already flagged.' })
       } else {
         const d = data as { error?: string; message?: string }
         setResult({ kind: 'error', code: status, message: d.error ?? d.message ?? `Unexpected error (${status}).` })
       }
+      setStep(4)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Report submission failed.')
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
-  // ── Step 3: result ───────────────────────────────────────────────────────
-  if (step === 3 && result) {
-    return (
-      <div className="wor-page">
-        <Stepper step={3} />
-        <div className={`wor-card ${result.kind === 'success' ? 'wor-card--success' : 'wor-card--danger'}`}>
-          {result.kind === 'success' ? (
-            <>
-              <div className="wor-result-icon wor-result-icon--success" />
-              <h2 className="wor-card-title">Wallet Flagged as Compromised</h2>
-              <p className="wor-card-desc">
-                Anyone checking this wallet on OTI will now see a compromised warning.
-                The flag is permanent — only an admin can reverse it.
-              </p>
-              <Link to="/score" className="wor-btn wor-btn--ghost" style={{ textAlign: 'center' }}>
-                ← Back to Score
-              </Link>
-            </>
-          ) : (
-            <>
-              <div className="wor-result-icon wor-result-icon--danger" />
-              <h2 className="wor-card-title">Report Failed</h2>
-              <p className="wor-card-desc">{result.message}</p>
-              {result.code === 404 && (
-                <Link to="/register" className="wor-btn wor-btn--outline" style={{ textAlign: 'center' }}>
-                  Register Your Wallet →
-                </Link>
-              )}
-              <button
-                className="wor-btn wor-btn--ghost"
-                onClick={() => { setStep(2); setResult(null); clearError() }}
-              >
-                ← Try Again
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    )
-  }
+  const parsed = challengeMessage ? parseChallengeMessage(challengeMessage) : null
 
   return (
     <div className="wor-page">
       <Stepper step={step} />
 
+      {/* ── Step 1: Address ── */}
       {step === 1 && (
         <div className="wor-card">
           <div className="wor-card-head">
@@ -202,8 +172,7 @@ export function Report() {
             <h2 className="wor-card-title">Report a Compromised Wallet</h2>
             <p className="wor-card-desc">
               If your wallet has been stolen or hacked, flag it here. OTI will immediately
-              show a compromised warning on every future score check for this address.
-              This action is irreversible except by an admin.
+              show a compromised warning on every future score check.
             </p>
           </div>
           <form onSubmit={handleAddressSubmit} className="wor-form">
@@ -214,19 +183,14 @@ export function Report() {
                 placeholder="0x… or wallet address"
                 value={address}
                 onChange={e => { setAddress(e.target.value); clearError() }}
-                spellCheck={false}
-                autoCorrect="off"
-                autoCapitalize="off"
-                required
-                autoFocus={!prefill}
+                spellCheck={false} autoCorrect="off" autoCapitalize="off"
+                required autoFocus={!prefill}
               />
             </div>
             {error && (
               <p className="wor-error">
                 {error}
-                {error.includes('register first') && (
-                  <>{' '}<Link to="/register" className="wor-link">Register →</Link></>
-                )}
+                {error.includes('register first') && <>{' '}<Link to="/register" className="wor-link">Register →</Link></>}
               </p>
             )}
             <button className="wor-btn wor-btn--primary" type="submit" disabled={loading}>
@@ -240,50 +204,69 @@ export function Report() {
         </div>
       )}
 
-      {step === 2 && (
+      {/* ── Step 2: Sign ── */}
+      {step === 2 && parsed && (
         <div className="wor-card">
           <div className="wor-card-head">
-            <h2 className="wor-card-title">Sign to Verify Ownership</h2>
+            <h2 className="wor-card-title">Prove Ownership</h2>
             <p className="wor-card-desc">
-              Connect your wallet and sign the message below to prove you own this address.
-              You will always see exactly what you're signing.
+              Sign the ownership proof below to confirm you control this wallet.
             </p>
           </div>
-
           <div className="wor-challenge-wrap">
             <div className="wor-challenge-header">
-              <span className="wor-challenge-icon" aria-hidden="true" />
-              <span className="wor-challenge-label">Challenge Message — Read Before Signing</span>
+              <span className="wor-challenge-label">Ownership Proof — Read Before Signing</span>
             </div>
-            <div className="wor-message-box">{challengeMessage}</div>
-            <p className="wor-challenge-note">
-              Your wallet will display this message exactly as shown above.
+            <div className="wor-challenge-fields">
+              <div className="wor-challenge-row">
+                <span className="wor-challenge-key">Platform</span>
+                <span className="wor-challenge-val">{parsed.title || 'OTI'}</span>
+              </div>
+              <div className="wor-challenge-row">
+                <span className="wor-challenge-key">Address</span>
+                <code className="wor-challenge-val wor-challenge-val--mono">{fmtAddress(parsed.address)}</code>
+              </div>
+              {parsed.timestamp && (
+                <div className="wor-challenge-row">
+                  <span className="wor-challenge-key">Signed at</span>
+                  <span className="wor-challenge-val">{fmtTimestamp(parsed.timestamp)}</span>
+                </div>
+              )}
+              {parsed.notice && (
+                <div className="wor-challenge-notice">{parsed.notice}</div>
+              )}
+            </div>
+          </div>
+          {error && <p className="wor-error">{error}</p>}
+          <div className="wor-form" style={{ gap: '0.5rem' }}>
+            <button
+              className="wor-btn wor-btn--primary"
+              onClick={() => setShowPicker(true)}
+              disabled={loading}
+            >
+              {loading ? `Waiting for ${walletName ?? 'wallet'}…` : 'Connect Wallet & Sign'}
+            </button>
+            <button className="wor-btn wor-btn--ghost" type="button"
+              onClick={() => { setStep(1); clearError() }} disabled={loading}>
+              ← Back
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Step 3: Passkey ── */}
+      {step === 3 && (
+        <div className="wor-card">
+          <div className="wor-card-head">
+            <h2 className="wor-card-title">Verify with Passkey</h2>
+            <p className="wor-card-desc">
+              Enter the passkey you set when registering this wallet.
+              This confirms only you can flag it as compromised.
             </p>
           </div>
-
-          <div className="wor-sign-status">
-            <button
-              className={`wor-btn${signature ? ' wor-btn--signed' : ' wor-btn--sign'}`}
-              type="button"
-              onClick={() => !signature && setShowPicker(true)}
-              disabled={loading || Boolean(signature)}
-            >
-              {loading && !signature
-                ? `Waiting for ${walletName ?? 'wallet'}…`
-                : signature
-                  ? `Signed with ${walletName ?? 'wallet'}`
-                  : 'Connect Wallet & Sign'}
-            </button>
-            {signature && (
-              <p className="wor-signed-note">Signature captured — enter your passkey below.</p>
-            )}
-          </div>
-
-          <form onSubmit={handleProceed} className="wor-form">
+          <form onSubmit={handlePasskeySubmit} className="wor-form">
             <div className="wor-security-field">
-              <div className="wor-security-field-header">
-                <label className="wor-form-label">Your Passkey</label>
-              </div>
+              <label className="wor-form-label">Your Passkey</label>
               <input
                 className="wor-input wor-input--security"
                 type="password"
@@ -291,25 +274,60 @@ export function Report() {
                 value={passkey}
                 onChange={e => { setPasskey(e.target.value); clearError() }}
                 autoComplete="current-password"
+                required autoFocus
               />
             </div>
             {error && <p className="wor-error">{error}</p>}
-            <button
-              className="wor-btn wor-btn--danger-action"
-              type="submit"
-              disabled={loading}
-            >
-              Report as Compromised
+            <button className="wor-btn wor-btn--danger-action" type="submit" disabled={loading}>
+              {loading ? 'Submitting…' : 'Report as Compromised'}
             </button>
-            <button
-              type="button"
-              className="wor-btn wor-btn--ghost"
-              onClick={() => { setStep(1); setSignature(''); setPasskey(''); clearError() }}
-              disabled={loading}
-            >
+            <button type="button" className="wor-btn wor-btn--ghost"
+              onClick={() => { setStep(2); clearError() }} disabled={loading}>
               ← Back
             </button>
           </form>
+        </div>
+      )}
+
+      {/* ── Step 4: Result ── */}
+      {step === 4 && result && (
+        <div className={`wor-card ${result.kind === 'success' ? 'wor-card--success' : 'wor-card--danger'}`}>
+          {result.kind === 'success' ? (
+            <>
+              <div className="wor-result-logo wor-result-logo--danger-bg">
+                <Logo size={44} />
+              </div>
+              <div>
+                <h2 className="wor-card-title">Wallet Flagged as Compromised</h2>
+                <p className="wor-card-desc" style={{ marginTop: '0.5rem' }}>
+                  Anyone checking this wallet on OTI will now see a compromised warning.
+                  The flag is permanent — only an admin can reverse it.
+                </p>
+              </div>
+              <Link to="/score" className="wor-btn wor-btn--ghost" style={{ textAlign: 'center' }}>
+                ← Back to Score
+              </Link>
+            </>
+          ) : (
+            <>
+              <div className="wor-result-logo">
+                <Logo size={44} />
+              </div>
+              <div>
+                <h2 className="wor-card-title">Report Failed</h2>
+                <p className="wor-card-desc" style={{ marginTop: '0.5rem' }}>{result.message}</p>
+              </div>
+              {result.code === 404 && (
+                <Link to="/register" className="wor-btn wor-btn--outline" style={{ textAlign: 'center' }}>
+                  Register Your Wallet →
+                </Link>
+              )}
+              <button className="wor-btn wor-btn--ghost"
+                onClick={() => { setStep(3); setResult(null); clearError() }}>
+                ← Try Again
+              </button>
+            </>
+          )}
         </div>
       )}
 
@@ -320,16 +338,14 @@ export function Report() {
             <div className="wor-confirm-icon" />
             <h3 className="wor-confirm-title">Confirm Report</h3>
             <p className="wor-confirm-text">
-              This will immediately flag your wallet as compromised across OTI. All future
-              score checks will show a compromised warning.
+              This will immediately flag your wallet as compromised across OTI.
+              All future score checks will show a compromised warning.
             </p>
             <p className="wor-confirm-text wor-confirm-text--warn">
               This cannot be undone by you — only an admin can reverse it.
             </p>
             <div className="wor-confirm-actions">
-              <button className="wor-btn wor-btn--ghost" onClick={() => setShowConfirm(false)}>
-                Cancel
-              </button>
+              <button className="wor-btn wor-btn--ghost" onClick={() => setShowConfirm(false)}>Cancel</button>
               <button className="wor-btn wor-btn--danger-action" onClick={handleConfirmedSubmit}>
                 Yes, Flag This Wallet
               </button>
@@ -339,10 +355,7 @@ export function Report() {
       )}
 
       {showPicker && (
-        <WalletPickerModal
-          onSelect={handleWalletSelected}
-          onClose={() => setShowPicker(false)}
-        />
+        <WalletPickerModal onSelect={handleWalletSelected} onClose={() => setShowPicker(false)} />
       )}
     </div>
   )

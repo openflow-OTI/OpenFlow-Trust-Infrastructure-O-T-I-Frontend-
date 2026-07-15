@@ -199,6 +199,15 @@ textarea {
   min-height: calc(100vh - 62px); /* keep home-page flex:1 filling viewport */
 }
 
+/* WOR pages (register / report) are viewport-locked — no page-level scroll */
+.app-main:has(.wor-page) {
+  height: calc(100dvh - 62px);
+  min-height: unset;
+  overflow: hidden;
+  padding: 0;
+  max-width: 100%;
+}
+
 /* Home page: reduce padding so the compact layout has more room.
    On mobile (≤768px) we additionally lock to the viewport with overflow:hidden
    so the page never scrolls on phones. */
@@ -3669,17 +3678,21 @@ textarea {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   width: 100%;
-  padding: 2.5rem 1rem 4rem;
+  height: 100%;
+  padding: 1.25rem 1rem 1.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* ── Visual stepper ── */
+/* ── Visual stepper (scales to 3 or 4 steps) ── */
 .wor-stepper {
   display: flex;
   align-items: flex-start;
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
 }
 
 .wor-stepper-segment {
@@ -3731,9 +3744,9 @@ textarea {
 }
 
 .wor-step-label {
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   color: var(--text);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
   font-weight: 500;
@@ -3762,12 +3775,12 @@ textarea {
   max-width: 480px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 2rem 1.75rem;
+  border-radius: 16px;
+  padding: 1.5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  gap: 1.1rem;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .wor-card--success {
@@ -3790,7 +3803,7 @@ textarea {
   gap: 0.6rem;
 }
 
-/* ── Result icons ── */
+/* ── Result icons / logo ── */
 .wor-result-icon {
   font-size: 2.75rem;
   line-height: 1;
@@ -3814,6 +3827,27 @@ textarea {
   background: rgba(255, 77, 94, 0.12);
   color: var(--danger);
   border: 1.5px solid rgba(255, 77, 94, 0.3);
+}
+
+/* Logo-based result state (replaces empty circle) */
+.wor-result-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(0, 229, 160, 0.10);
+  border: 1.5px solid rgba(0, 229, 160, 0.35);
+  box-shadow: 0 0 24px rgba(0, 229, 160, 0.20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 0.25rem;
+}
+
+.wor-result-logo--danger-bg {
+  background: rgba(255, 77, 94, 0.10);
+  border-color: rgba(255, 77, 94, 0.35);
+  box-shadow: 0 0 24px rgba(255, 77, 94, 0.18);
 }
 
 /* ── Typography ── */
@@ -3912,7 +3946,7 @@ textarea {
   box-shadow: 0 0 0 2px rgba(0, 229, 160, 0.12), 0 0 18px rgba(0, 229, 160, 0.10);
 }
 
-/* ── Challenge message (security artifact) ── */
+/* ── Challenge message (structured ownership proof display) ── */
 .wor-challenge-wrap {
   display: flex;
   flex-direction: column;
@@ -3931,13 +3965,65 @@ textarea {
 }
 
 .wor-challenge-label {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
+/* Structured field layout (replaces raw monospace box) */
+.wor-challenge-fields {
+  background: #060a13;
+  border: 1px solid rgba(0, 229, 160, 0.18);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.wor-challenge-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba(0, 229, 160, 0.07);
+}
+
+.wor-challenge-row:last-child {
+  border-bottom: none;
+}
+
+.wor-challenge-key {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 160, 0.5);
+  flex-shrink: 0;
+  min-width: 72px;
+}
+
+.wor-challenge-val {
+  font-size: 0.78rem;
+  color: rgba(0, 229, 160, 0.88);
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.wor-challenge-val--mono {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.wor-challenge-notice {
+  padding: 0.5rem 1rem;
+  font-size: 0.68rem;
+  color: rgba(255, 200, 60, 0.8);
+  background: rgba(255, 200, 60, 0.05);
+  border-top: 1px solid rgba(255, 200, 60, 0.1);
+  font-style: italic;
+}
+
+/* Legacy message box — kept for backward compat */
 .wor-message-box {
   background: #060a13;
   border: 1px solid rgba(0, 229, 160, 0.18);
@@ -3951,9 +4037,8 @@ textarea {
   white-space: pre-wrap;
   -webkit-user-select: text;
   user-select: text;
-  max-height: 200px;
+  max-height: 160px;
   overflow-y: auto;
-  box-shadow: inset 0 1px 0 rgba(0, 229, 160, 0.05);
 }
 
 .wor-challenge-note {
@@ -3966,11 +4051,7 @@ textarea {
 .wor-security-field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem 1rem 1rem;
-  background: rgba(0, 229, 160, 0.025);
-  border: 1px solid rgba(0, 229, 160, 0.12);
-  border-radius: 8px;
+  gap: 0.45rem;
 }
 
 .wor-security-field-header {
