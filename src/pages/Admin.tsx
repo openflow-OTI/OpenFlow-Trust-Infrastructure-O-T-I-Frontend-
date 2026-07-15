@@ -52,7 +52,6 @@ class AdminErrorBoundary extends Component<
 }
 
 type Screen = 'dashboard' | 'keys' | 'usage' | 'history' | 'cache' | 'plans' | 'flagged' | 'sync' | 'wor'
-type WORSubView = 'registry' | 'compromised' | 'override'
 
 const SCREENS: { id: Screen; label: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard',       icon: '▦' },
