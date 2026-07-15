@@ -1,14 +1,8 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { worFetch } from '@/lib/worClient'
-
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
-    }
-  }
-}
+import { WalletPickerModal } from '@/components/WalletPickerModal'
+import { signWithProvider, type WalletProvider } from '@/lib/walletConnector'
 
 type Step = 1 | 2 | 3
 
@@ -55,6 +49,8 @@ export function Report() {
   const [error, setError]                       = useState<string | null>(null)
   const [result, setResult]                     = useState<ResultState | null>(null)
   const [showConfirm, setShowConfirm]           = useState(false)
+  const [showPicker, setShowPicker]             = useState(false)
+  const [walletName, setWalletName]             = useState<string | null>(null)
 
   function clearError() { setError(null) }
 
@@ -93,27 +89,21 @@ export function Report() {
     setStep(2)
   }
 
-  async function handleSign() {
-    if (!window.ethereum) {
-      setError('MetaMask not detected. Please install MetaMask to continue.')
-      return
-    }
+  async function handleWalletSelected(provider: WalletProvider, name: string) {
+    setShowPicker(false)
+    setWalletName(name)
     setLoading(true)
     setError(null)
     try {
-      const accounts = (await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      })) as string[]
-      if (!accounts || accounts.length === 0) throw new Error('No accounts available in MetaMask.')
-      const sig = (await window.ethereum.request({
-        method: 'personal_sign',
-        params: [challengeMessage, accounts[0]],
-      })) as string
+      const { signature: sig } = await signWithProvider(provider, challengeMessage)
       setSignature(sig)
     } catch (err: unknown) {
       const e = err as { code?: number; message?: string }
-      if (e?.code === 4001) setError('Signature request cancelled.')
-      else setError(e?.message ?? 'Failed to sign message.')
+      if (e?.code === 4001 || e?.message?.includes('rejected') || e?.message?.includes('denied')) {
+        setError('Signature request cancelled.')
+      } else {
+        setError(e?.message ?? 'Failed to sign message.')
+      }
     } finally {
       setLoading(false)
     }
@@ -121,8 +111,8 @@ export function Report() {
 
   function handleProceed(e: React.FormEvent) {
     e.preventDefault()
-    if (!passkey) { setError('Enter your passkey.'); return }
     if (!signature) { setError('You must sign the challenge message first.'); return }
+    if (!passkey) { setError('Enter your passkey.'); return }
     setShowConfirm(true)
   }
 
@@ -253,10 +243,10 @@ export function Report() {
       {step === 2 && (
         <div className="wor-card">
           <div className="wor-card-head">
-            <h2 className="wor-card-title">Verify Ownership &amp; Report</h2>
+            <h2 className="wor-card-title">Sign to Verify Ownership</h2>
             <p className="wor-card-desc">
-              Sign the message below with MetaMask to confirm you own this wallet,
-              then enter your passkey. You will always see what you're signing.
+              Connect your wallet and sign the message below to prove you own this address.
+              You will always see exactly what you're signing.
             </p>
           </div>
 
@@ -267,7 +257,7 @@ export function Report() {
             </div>
             <div className="wor-message-box">{challengeMessage}</div>
             <p className="wor-challenge-note">
-              MetaMask will display this message exactly as shown above.
+              Your wallet will display this message exactly as shown above.
             </p>
           </div>
 
@@ -275,10 +265,14 @@ export function Report() {
             <button
               className={`wor-btn${signature ? ' wor-btn--signed' : ' wor-btn--sign'}`}
               type="button"
-              onClick={handleSign}
+              onClick={() => !signature && setShowPicker(true)}
               disabled={loading || Boolean(signature)}
             >
-              {loading && !signature ? 'Waiting for MetaMask…' : signature ? 'Message Signed' : 'Sign with MetaMask'}
+              {loading && !signature
+                ? `Waiting for ${walletName ?? 'wallet'}…`
+                : signature
+                  ? `Signed with ${walletName ?? 'wallet'}`
+                  : 'Connect Wallet & Sign'}
             </button>
             {signature && (
               <p className="wor-signed-note">Signature captured — enter your passkey below.</p>
@@ -342,6 +336,13 @@ export function Report() {
             </div>
           </div>
         </div>
+      )}
+
+      {showPicker && (
+        <WalletPickerModal
+          onSelect={handleWalletSelected}
+          onClose={() => setShowPicker(false)}
+        />
       )}
     </div>
   )

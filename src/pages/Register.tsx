@@ -1,14 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { worFetch } from '@/lib/worClient'
-
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
-    }
-  }
-}
+import { WalletPickerModal } from '@/components/WalletPickerModal'
+import { signWithProvider, type WalletProvider } from '@/lib/walletConnector'
 
 type Step = 1 | 2 | 3
 
@@ -48,6 +42,8 @@ export function Register() {
   const [loading, setLoading]                   = useState(false)
   const [error, setError]                       = useState<string | null>(null)
   const [success, setSuccess]                   = useState(false)
+  const [showPicker, setShowPicker]             = useState(false)
+  const [walletName, setWalletName]             = useState<string | null>(null)
 
   function clearError() { setError(null) }
 
@@ -82,28 +78,22 @@ export function Register() {
     setStep(2)
   }
 
-  async function handleSign() {
-    if (!window.ethereum) {
-      setError('MetaMask not detected. Please install MetaMask to continue.')
-      return
-    }
+  async function handleWalletSelected(provider: WalletProvider, name: string) {
+    setShowPicker(false)
+    setWalletName(name)
     setLoading(true)
     setError(null)
     try {
-      const accounts = (await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      })) as string[]
-      if (!accounts || accounts.length === 0) throw new Error('No accounts available in MetaMask.')
-      const sig = (await window.ethereum.request({
-        method: 'personal_sign',
-        params: [challengeMessage, accounts[0]],
-      })) as string
+      const { signature: sig } = await signWithProvider(provider, challengeMessage)
       setSignature(sig)
       setStep(3)
     } catch (err: unknown) {
       const e = err as { code?: number; message?: string }
-      if (e?.code === 4001) setError('Signature request cancelled.')
-      else setError(e?.message ?? 'Failed to sign message.')
+      if (e?.code === 4001 || e?.message?.includes('rejected') || e?.message?.includes('denied')) {
+        setError('Signature request cancelled.')
+      } else {
+        setError(e?.message ?? 'Failed to sign message.')
+      }
     } finally {
       setLoading(false)
     }
@@ -206,8 +196,8 @@ export function Register() {
           <div className="wor-card-head">
             <h2 className="wor-card-title">Sign the Challenge</h2>
             <p className="wor-card-desc">
-              Prove ownership by signing the message below. You will always see the exact
-              text before MetaMask asks you to sign — never sign something you haven't read.
+              Prove ownership by signing the message below with any wallet.
+              You will always see the exact text before signing.
             </p>
           </div>
           <div className="wor-challenge-wrap">
@@ -217,13 +207,19 @@ export function Register() {
             </div>
             <div className="wor-message-box">{challengeMessage}</div>
             <p className="wor-challenge-note">
-              MetaMask will display this message exactly as shown above.
+              Your wallet will display this message exactly as shown above.
             </p>
           </div>
           {error && <p className="wor-error">{error}</p>}
           <div className="wor-form" style={{ gap: '0.6rem' }}>
-            <button className="wor-btn wor-btn--primary" onClick={handleSign} disabled={loading}>
-              {loading ? 'Waiting for MetaMask…' : 'Sign with MetaMask'}
+            <button
+              className="wor-btn wor-btn--primary"
+              onClick={() => setShowPicker(true)}
+              disabled={loading}
+            >
+              {loading
+                ? `Waiting for ${walletName ?? 'wallet'}…`
+                : 'Connect Wallet & Sign'}
             </button>
             <button
               className="wor-btn wor-btn--ghost"
@@ -280,7 +276,7 @@ export function Register() {
             </p>
             {error && <p className="wor-error">{error}</p>}
             <button className="wor-btn wor-btn--primary" type="submit" disabled={loading}>
-              {loading ? 'Registering…' : '✓ Register Wallet'}
+              {loading ? 'Registering…' : 'Register Wallet'}
             </button>
             <button
               type="button"
@@ -292,6 +288,13 @@ export function Register() {
             </button>
           </form>
         </div>
+      )}
+
+      {showPicker && (
+        <WalletPickerModal
+          onSelect={handleWalletSelected}
+          onClose={() => setShowPicker(false)}
+        />
       )}
     </div>
   )
