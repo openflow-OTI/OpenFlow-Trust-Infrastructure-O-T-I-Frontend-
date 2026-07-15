@@ -212,7 +212,7 @@ export function Home() {
                 </div>
               </div>
 
-              {/* WOR register prompt — shown when wallet is not yet registered */}
+              {/* WOR prompt — register if not yet registered, report if registered */}
               {regStatus.isSuccess && regStatus.data === 'not_registered' && (
                 <Link
                   to={`/register?address=${encodeURIComponent(wallet)}`}
@@ -220,6 +220,17 @@ export function Home() {
                 >
                   <span className="results-wor-prompt-text">
                     Own this wallet? Register it with OTI to protect it.
+                  </span>
+                  <span className="results-wor-prompt-arrow">→</span>
+                </Link>
+              )}
+              {regStatus.isSuccess && regStatus.data === 'active' && (
+                <Link
+                  to={`/report?address=${encodeURIComponent(wallet)}`}
+                  className="results-wor-prompt"
+                >
+                  <span className="results-wor-prompt-text">
+                    Wallet compromised? Report it.
                   </span>
                   <span className="results-wor-prompt-arrow">→</span>
                 </Link>

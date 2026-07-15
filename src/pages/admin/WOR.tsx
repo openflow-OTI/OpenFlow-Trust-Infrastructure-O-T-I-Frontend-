@@ -81,6 +81,7 @@ function RegistryTable({
     try {
       await adminFetch(`/admin/wor/flag/${encodeURIComponent(addr)}`, { method: 'DELETE' })
       qc.invalidateQueries({ queryKey: ['admin', 'wor'] })
+      qc.invalidateQueries({ queryKey: ['admin', 'stats'] })
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Failed to remove flag.')
     } finally {
@@ -229,6 +230,7 @@ function ManualOverride() {
       setFlagMsg({ ok: true, text: (res as { message?: string }).message ?? 'Wallet flagged successfully.' })
       setFlagAddr('')
       qc.invalidateQueries({ queryKey: ['admin', 'wor'] })
+      qc.invalidateQueries({ queryKey: ['admin', 'stats'] })
     } catch (err) {
       setFlagMsg({ ok: false, text: err instanceof Error ? err.message : 'Flag failed.' })
     } finally {
@@ -251,6 +253,7 @@ function ManualOverride() {
       setUnflagMsg({ ok: true, text: (res as { message?: string }).message ?? 'Flag removed successfully.' })
       setUnflagAddr('')
       qc.invalidateQueries({ queryKey: ['admin', 'wor'] })
+      qc.invalidateQueries({ queryKey: ['admin', 'stats'] })
     } catch (err) {
       setUnflagMsg({ ok: false, text: err instanceof Error ? err.message : 'Unflag failed.' })
     } finally {

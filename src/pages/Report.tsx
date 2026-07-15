@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { ShieldAlert } from 'lucide-react'
 import { worFetch } from '@/lib/worClient'
 import { WalletPickerModal } from '@/components/WalletPickerModal'
 import { signWithProvider, type WalletProvider } from '@/lib/walletConnector'
@@ -278,7 +279,11 @@ export function Report() {
               />
             </div>
             {error && <p className="wor-error">{error}</p>}
-            <button className="wor-btn wor-btn--danger-action" type="submit" disabled={loading}>
+            <button
+              className="wor-btn wor-btn--danger-action"
+              type="submit"
+              disabled={loading || !signature || !passkey.trim()}
+            >
               {loading ? 'Submitting…' : 'Report as Compromised'}
             </button>
             <button type="button" className="wor-btn wor-btn--ghost"
@@ -294,8 +299,8 @@ export function Report() {
         <div className={`wor-card ${result.kind === 'success' ? 'wor-card--success' : 'wor-card--danger'}`}>
           {result.kind === 'success' ? (
             <>
-              <div className="wor-result-logo wor-result-logo--danger-bg">
-                <Logo size={44} />
+              <div className="wor-result-icon wor-result-icon--danger">
+                <ShieldAlert size={32} strokeWidth={2} aria-hidden="true" />
               </div>
               <div>
                 <h2 className="wor-card-title">Wallet Flagged as Compromised</h2>

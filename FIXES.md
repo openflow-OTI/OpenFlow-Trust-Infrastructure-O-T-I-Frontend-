@@ -149,6 +149,17 @@
 ### FF24 — Query History Export to CSV ✅
 **Fixed:** July 14, 2026. Added "↓ Export CSV" button to `src/pages/admin/QueryHistory.tsx`. Exports whatever is currently visible (filtered or full). Button label shows filtered count when filters are active (e.g. "↓ Export CSV (12)"). Filename includes date and "-filtered" suffix when filters are on. Pure client-side — no API call, no dependencies. Handles CSV escaping (quoted fields with embedded commas/quotes). Button hidden when there are no results to export.
 
+### FF24 — WOR UI/UX Polish, Ecosystem Wiring, and Admin Improvements 🔴 ACTIVE
+**Note:** ID reused — flagged to the Manager, this is a distinct item from the FF24 CSV export entry above, kept for history.
+**Status:** In progress. Assigned July 15, 2026. Build complete, verified locally, awaiting Manager review before marking ✅.
+1. Dashboard FLAGGED WALLETS card navigation to WOR → Compromised was already wired (`Dashboard.tsx` `onNavigateToWor`). Added missing piece: stats now invalidate/refetch immediately after any flag/unflag action (`WOR.tsx` — `RegistryTable.handleRemove`, `ManualOverride.handleFlag`, `ManualOverride.handleUnflag` all now also invalidate `['admin','stats']`).
+2. WOR entry points: homepage WOR section, score-input quiet links, and results-page "Own this wallet? Register it" prompt already existed from FF28. Added the missing counterpart in `Home.tsx`: when a wallet is registered (`active`) and not compromised, the results page now shows "Wallet compromised? Report it →" linking to `/report`.
+3. `/register`, `/report`, and the admin WOR tab step indicators, card styling, and table styling already matched the app's design system from FF28. Verified step order on `/report` (sign before passkey) is correct. Hardened the Submit button on `/report` step 3 to stay disabled until both `signature` and `passkey` have values (previously only checked `loading`).
+4. `/report` success screen: replaced the `Logo` icon with a Lucide `ShieldAlert` icon inside the existing `.wor-result-icon--danger` badge style.
+5. Mobile table overflow on WOR admin tables: already handled — `RegistryTable` already wraps its table in `.admin-table-wrap`, which has `overflow-x: auto` shared with every other admin table.
+
+`npm run build` — zero TypeScript errors. Verified visually via local dev screenshots of `/register` and `/report` (desktop). Could not verify the admin WOR tab or live Vercel deployment — no admin secret available in this environment and this Builder has no push/deploy access; verification against production happens after Ahmad merges.
+
 ### FF23 — Cache Tab Visual Toggle Switch ✅
 **Fixed:** July 14, 2026. Replaced button-based cache toggle in `src/pages/admin/AdminCache.tsx` with a proper sliding pill toggle switch (CSS in `src/index.css`).
 
