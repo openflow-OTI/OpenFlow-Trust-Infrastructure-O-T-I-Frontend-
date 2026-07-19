@@ -131,15 +131,7 @@ export function Home() {
 
 
         <footer className="home-footer">
-          <a
-            href="https://otiscore.vercel.app"
-            className="home-footer-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            otiscore.vercel.app
-          </a>
-          {' · '}OTI Trust Score
+          OTI Trust Score
         </footer>
       </div>
     )
