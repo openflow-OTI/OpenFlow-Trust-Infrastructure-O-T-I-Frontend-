@@ -1941,12 +1941,11 @@ textarea {
   }
 
   .home-page {
-    padding: 0.1rem 0 0;
+    padding: 22vh 0 0;
     gap: 0.6rem;
   }
 
-  /* Hide entire intro block on mobile — logo, OTI title, and taglines
-     all removed so the form card sits at the top with no wasted space */
+  /* Hide entire intro block on mobile */
   .home-intro {
     display: none;
   }
