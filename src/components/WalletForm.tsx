@@ -60,7 +60,9 @@ export function WalletForm({ onSubmit, initialAddress = '', initialChain }: Wall
       </label>
       <ChainSelect id="chain" value={chain} onChange={setChain} />
 
-      {formError && <p className="wallet-form-error">{formError}</p>}
+      <p className="wallet-form-error" style={{ visibility: formError ? 'visible' : 'hidden' }}>
+        {formError || ' '}
+      </p>
 
       <button type="submit" className="wallet-form-submit">
         Check trust score
