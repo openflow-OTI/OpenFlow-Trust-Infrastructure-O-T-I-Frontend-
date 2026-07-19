@@ -129,11 +129,6 @@ export function Home() {
           </span>
         </div>
 
-        <div className="home-wor-links">
-          <Link to="/register" className="home-wor-link">
-            Own this wallet? Register it
-          </Link>
-        </div>
 
         <footer className="home-footer">
           <a
